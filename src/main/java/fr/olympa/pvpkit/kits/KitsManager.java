@@ -15,8 +15,8 @@ import fr.olympa.api.sql.SQLTable;
 public class KitsManager {
 	
 	private final SQLTable<Kit> table;
-	public final SQLColumn<Kit> columnId = new SQLColumn<Kit>("id", "VARCHAR", Types.VARCHAR).setPrimaryKey(Kit::getId).setUpdatable();
-	public final SQLColumn<Kit> columnName = new SQLColumn<Kit>("name", "VARCHAR", Types.VARCHAR).setUpdatable();
+	public final SQLColumn<Kit> columnId = new SQLColumn<Kit>("id", "VARCHAR(45)", Types.VARCHAR).setPrimaryKey(Kit::getId).setUpdatable();
+	public final SQLColumn<Kit> columnName = new SQLColumn<Kit>("name", "VARCHAR(45)", Types.VARCHAR).setUpdatable();
 	public final SQLColumn<Kit> columnItems = new SQLColumn<Kit>("items", "VARBINARY(8000)", Types.VARBINARY).setUpdatable();
 	
 	private final List<Kit> kits;

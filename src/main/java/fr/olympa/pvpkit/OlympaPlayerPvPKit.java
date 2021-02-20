@@ -34,12 +34,19 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	
 	public OlympaPlayerPvPKit(UUID uuid, String name, String ip) {
 		super(uuid, name, ip);
+	}
+	
+	@Override
+	public void loaded() {
 		money.observe("datas", () -> COLUMN_MONEY.updateAsync(this, money.get(), null, null));
+		money.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineMoney.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
 		killStreak.observe("datas", () -> COLUMN_KILL_STREAK.updateAsync(this, killStreak.get(), null, null));
+		killStreak.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineKillStreak.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
 		level.observe("datas", () -> COLUMN_LEVEL.updateAsync(this, level.get(), null, null));
 		level.observe("levelManagement", new LevelManagement(this));
 		xp.observe("datas", () -> COLUMN_XP.updateAsync(this, xp.get(), null, null));
 		xp.observe("xpManagement", new XPManagement(this));
+		xp.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineLevel.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
 	}
 	
 	@Override

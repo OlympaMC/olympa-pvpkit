@@ -49,9 +49,9 @@ public class LevelCommand extends ComplexCommand {
 	}
 	
 	public void sendXP(OlympaPlayerPvPKit player) {
-		sendSuccess("Expérience de %s:\n"
-				+ "§e➤ Niveau: %d"
-				+ "§e➤ Expérience: %d/%d ", player.getName(), player.getLevel().get(), player.getXP().get(), XPManagement.getXPToLevelUp(player.getLevel().get()));
+		sendSuccess("Expérience de %s:"
+				+ "\n§e➤ Niveau: %d"
+				+ "\n§e➤ Expérience: %d/%d ", player.getName(), player.getLevel().get(), player.getXP().get(), XPManagement.getXPToLevelUp(player.getLevel().get()));
 	}
 	
 }
