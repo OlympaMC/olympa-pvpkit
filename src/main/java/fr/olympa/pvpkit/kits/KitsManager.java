@@ -1,4 +1,4 @@
-package fr.olympa.pvpkit;
+package fr.olympa.pvpkit.kits;
 
 import java.io.IOException;
 import java.sql.SQLException;

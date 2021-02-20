@@ -1,4 +1,4 @@
-package fr.olympa.pvpkit.manage;
+package fr.olympa.pvpkit.kits;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -13,7 +13,6 @@ import fr.olympa.api.command.complex.Cmd;
 import fr.olympa.api.command.complex.CommandContext;
 import fr.olympa.api.command.complex.ComplexCommand;
 import fr.olympa.api.utils.Prefix;
-import fr.olympa.pvpkit.Kit;
 import fr.olympa.pvpkit.OlympaPvPKit;
 import fr.olympa.pvpkit.PvPKitPermissions;
 

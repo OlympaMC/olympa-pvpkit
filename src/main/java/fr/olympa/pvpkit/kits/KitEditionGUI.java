@@ -1,4 +1,4 @@
-package fr.olympa.pvpkit.manage;
+package fr.olympa.pvpkit.kits;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package fr.olympa.pvpkit;
+package fr.olympa.pvpkit.kits;
 
 import java.io.IOException;
 
@@ -10,6 +10,8 @@ import fr.olympa.api.item.ItemUtils;
 import fr.olympa.api.player.OlympaPlayer;
 import fr.olympa.api.utils.Prefix;
 import fr.olympa.api.utils.spigot.SpigotUtils;
+import fr.olympa.pvpkit.OlympaPlayerPvPKit;
+import fr.olympa.pvpkit.OlympaPvPKit;
 
 public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
