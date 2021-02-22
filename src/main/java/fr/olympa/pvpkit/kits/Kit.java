@@ -25,6 +25,7 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 		this.items = items;
 		this.icon = icon;
 		this.minLevel = minLevel;
+		refreshIconGUI();
 	}
 	
 	@Override
@@ -44,6 +45,7 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	public void setName(String name) {
 		this.name = name;
 		OlympaPvPKit.getInstance().kits.columnName.updateAsync(this, name, null, null);
+		refreshIconGUI();
 	}
 	
 	public ItemStack[] getItems() {
@@ -68,11 +70,11 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 		int i = 0;
 		String[] lore = new String[items.length + 4];
 		lore[i++] = "";
-		for (ItemStack item : items) lore[i++] = ItemUtils.getName(item);
+		for (ItemStack item : items) lore[i++] = "§8● " + ItemUtils.getName(item);
 		lore[i++] = "";
-		lore[i++] = "§8Clic droit> §7voir le contenu";
+		lore[i++] = "§8§lClic droit> §7voir le contenu";
 		lore[i++] = "§8§lClic gauche> §7§lsélectionner le kit";
-		this.iconGUI = ItemUtils.lore(icon.clone(), lore);
+		this.iconGUI = ItemUtils.name(ItemUtils.lore(icon.clone(), lore), name);
 	}
 	
 	public ItemStack getIcon() {
@@ -100,11 +102,12 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
 	@Override
 	public void give(OlympaPlayerPvPKit olympaPlayer, Player p) {
+		p.getInventory().clear();
 		SpigotUtils.giveItems(p, items);
-		Prefix.DEFAULT_GOOD.sendMessage(p, "Tu as reçu le kit %s ! Bon combat !", id);
 		olympaPlayer.setInPvPZone(this);
 		p.closeInventory();
 		p.teleport(OlympaPvPKit.getInstance().pvpLocation);
+		Prefix.DEFAULT_GOOD.sendMessage(p, "Tu as reçu le kit %s ! Bon combat !", id);
 	}
 	
 	@Override

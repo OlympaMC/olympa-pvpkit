@@ -1,19 +1,28 @@
 package fr.olympa.pvpkit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
+import fr.olympa.api.item.ItemUtils;
 import fr.olympa.api.utils.Prefix;
+import fr.olympa.pvpkit.kits.gui.KitListGUI;
 import fr.olympa.pvpkit.xp.XPManagement;
 
 public class PvPKitListener implements Listener {
+	
+	private static final ItemStack MENU_ITEM = ItemUtils.item(Material.NETHER_STAR, "§bSélecteur de Kit", "§8> §7Clique ici pour ouvrir", "  §7le menu des Kits !");
 	
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
@@ -55,7 +64,7 @@ public class PvPKitListener implements Listener {
 			killerOP.getXP().add(xpGain);
 			killerOP.getGameMoney().give(xpGain);
 				
-			e.setDeathMessage("§4➤ §c" + dead.getName() + "(" + deadOP.getUsedKit().getName() + ") s'est fait tuer par " + killer.getName() + " (" + killerOP.getUsedKit().getName() + ")");
+			e.setDeathMessage("§4➤ §c" + dead.getName() + "(" + deadOP.getUsedKit().getId() + ") s'est fait tuer par " + killer.getName() + " (" + killerOP.getUsedKit().getName() + ")");
 		}else {
 			e.setDeathMessage("§4➤ §c" + dead.getName() + " est mort.");
 		}
@@ -79,8 +88,28 @@ public class PvPKitListener implements Listener {
 	}
 	
 	@EventHandler
+	public void onRespawn(PlayerRespawnEvent e) {
+		e.setRespawnLocation(Bukkit.getWorld("world").getSpawnLocation());
+		giveMenuItem(e.getPlayer());
+	}
+	
+	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		e.getPlayer().getInventory().clear();
+		giveMenuItem(e.getPlayer());
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		if (e.getHand() == EquipmentSlot.HAND) {
+			if (MENU_ITEM.equals(e.getItem())) {
+				new KitListGUI().create(e.getPlayer());
+			}
+		}
+	}
+	
+	public static void giveMenuItem(Player p) {
+		p.getInventory().setItem(4, MENU_ITEM);
 	}
 	
 }
