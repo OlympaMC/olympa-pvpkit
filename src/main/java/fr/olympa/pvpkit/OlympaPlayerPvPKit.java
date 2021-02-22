@@ -15,6 +15,8 @@ import fr.olympa.api.provider.AccountProvider;
 import fr.olympa.api.provider.OlympaPlayerObject;
 import fr.olympa.api.sql.SQLColumn;
 import fr.olympa.api.utils.observable.ObservableInt;
+import fr.olympa.core.spigot.OlympaCore;
+import fr.olympa.pvpkit.kits.Kit;
 import fr.olympa.pvpkit.xp.LevelManagement;
 import fr.olympa.pvpkit.xp.XPManagement;
 
@@ -32,6 +34,8 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	private ObservableInt level = new ObservableInt(1);
 	private ObservableInt xp = new ObservableInt(0);
 	
+	private Kit usedKit = null;
+	
 	public OlympaPlayerPvPKit(UUID uuid, String name, String ip) {
 		super(uuid, name, ip);
 	}
@@ -44,6 +48,8 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 		killStreak.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineKillStreak.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
 		level.observe("datas", () -> COLUMN_LEVEL.updateAsync(this, level.get(), null, null));
 		level.observe("levelManagement", new LevelManagement(this));
+		level.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineLevel.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
+		level.observe("tab_update", () -> OlympaCore.getInstance().getNameTagApi().callNametagUpdate(this));
 		xp.observe("datas", () -> COLUMN_XP.updateAsync(this, xp.get(), null, null));
 		xp.observe("xpManagement", new XPManagement(this));
 		xp.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineLevel.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
@@ -64,6 +70,18 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	
 	public ObservableInt getXP() {
 		return xp;
+	}
+	
+	public boolean isInPvPZone() {
+		return usedKit != null;
+	}
+	
+	public Kit getUsedKit() {
+		return usedKit;
+	}
+	
+	public void setInPvPZone(Kit usedKit) {
+		this.usedKit = usedKit;
 	}
 	
 	@Override

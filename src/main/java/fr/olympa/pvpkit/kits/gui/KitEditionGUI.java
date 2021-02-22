@@ -1,4 +1,4 @@
-package fr.olympa.pvpkit.kits;
+package fr.olympa.pvpkit.kits.gui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.olympa.api.gui.Inventories;
 import fr.olympa.api.gui.OlympaGUI;
 import fr.olympa.api.item.ItemUtils;
+import fr.olympa.api.utils.Prefix;
 
 public class KitEditionGUI extends OlympaGUI {
 	
@@ -31,6 +32,11 @@ public class KitEditionGUI extends OlympaGUI {
 	}
 	
 	@Override
+	public boolean onMoveItem(Player p, ItemStack moved) {
+		return false;
+	}
+	
+	@Override
 	public boolean onClickCursor(Player p, ItemStack current, ItemStack cursor, int slot) {
 		return slot >= 16; // cancel si c'est les item 16 et 17
 	}
@@ -41,9 +47,13 @@ public class KitEditionGUI extends OlympaGUI {
 		if (slot == 17) {
 			List<ItemStack> items = new ArrayList<>();
 			ItemStack[] contents = inv.getContents();
-			for (int i = 0; i < contents.length; i++) {
+			for (int i = 0; i < contents.length && i < 16; i++) {
 				ItemStack item = contents[i];
 				if (item != null) items.add(item);
+			}
+			if (items.isEmpty()) {
+				Prefix.DEFAULT_BAD.sendMessage(p, "Tu ne peux pas créer un kit vide !");
+				return true;
 			}
 			end.accept(items.toArray(ItemStack[]::new));
 		}

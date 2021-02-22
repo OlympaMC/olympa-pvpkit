@@ -1,0 +1,9 @@
+pvpLocation: world -94 91 32 -90 0
+
+safeZone:
+  ==: fr.olympa.api.region.shapes.ExpandedCuboid
+  world: "world"
+  xMin: -220
+  zMin: -340
+  xMax: -75
+  zMax: -220

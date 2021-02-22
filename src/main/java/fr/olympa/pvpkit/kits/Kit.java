@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.olympa.api.command.essentials.KitCommand.IKit;
 import fr.olympa.api.item.ItemUtils;
-import fr.olympa.api.player.OlympaPlayer;
 import fr.olympa.api.utils.Prefix;
 import fr.olympa.api.utils.spigot.SpigotUtils;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
@@ -17,11 +16,15 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
 	private String id, name;
 	private ItemStack[] items;
+	private ItemStack icon, iconGUI;
+	private int minLevel;
 	
-	protected Kit(String id, String name, ItemStack[] items) {
+	protected Kit(String id, String name, ItemStack[] items, ItemStack icon, int minLevel) {
 		this.id = id;
 		this.name = name;
 		this.items = items;
+		this.icon = icon;
+		this.minLevel = minLevel;
 	}
 	
 	@Override
@@ -54,11 +57,64 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
+		refreshIconGUI();
+	}
+	
+	public ItemStack getIconGUI() {
+		return iconGUI;
+	}
+	
+	private void refreshIconGUI() {
+		int i = 0;
+		String[] lore = new String[items.length + 4];
+		lore[i++] = "";
+		for (ItemStack item : items) lore[i++] = ItemUtils.getName(item);
+		lore[i++] = "";
+		lore[i++] = "§8Clic droit> §7voir le contenu";
+		lore[i++] = "§8§lClic gauche> §7§lsélectionner le kit";
+		this.iconGUI = ItemUtils.lore(icon.clone(), lore);
+	}
+	
+	public ItemStack getIcon() {
+		return icon;
+	}
+	
+	public void setIcon(ItemStack icon) {
+		this.icon = icon;
+		try {
+			OlympaPvPKit.getInstance().kits.columnIcon.updateAsync(this, SpigotUtils.serialize(icon), null, null);
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		refreshIconGUI();
+	}
+	
+	public int getMinLevel() {
+		return minLevel;
+	}
+	
+	public void setMinLevel(int minLevel) {
+		this.minLevel = minLevel;
+		OlympaPvPKit.getInstance().kits.columnLevel.updateAsync(this, minLevel, null, null);
 	}
 	
 	@Override
-	public boolean canTake(OlympaPlayer player) {
-		return true;
+	public void give(OlympaPlayerPvPKit olympaPlayer, Player p) {
+		SpigotUtils.giveItems(p, items);
+		Prefix.DEFAULT_GOOD.sendMessage(p, "Tu as reçu le kit %s ! Bon combat !", id);
+		olympaPlayer.setInPvPZone(this);
+		p.closeInventory();
+		p.teleport(OlympaPvPKit.getInstance().pvpLocation);
+	}
+	
+	@Override
+	public boolean canTake(OlympaPlayerPvPKit player) {
+		return !player.isInPvPZone() && player.getLevel().get() >= minLevel;
+	}
+	
+	@Override
+	public void sendImpossibleToTake(OlympaPlayerPvPKit player) {
+		Prefix.DEFAULT_BAD.sendMessage(player.getPlayer(), "Tu ne peux pas prendre de kit si tu es déjà en combat !");
 	}
 	
 	@Override
@@ -73,11 +129,5 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
 	@Override
 	public void setLastTake(OlympaPlayerPvPKit player, long time) {}
-	
-	@Override
-	public void give(OlympaPlayerPvPKit olympaPlayer, Player p) {
-		SpigotUtils.giveItems(p, items);
-		Prefix.DEFAULT_GOOD.sendMessage(p, "Tu as reçu le kit %s !", id);
-	}
 	
 }

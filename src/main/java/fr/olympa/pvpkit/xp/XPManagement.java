@@ -2,6 +2,7 @@ package fr.olympa.pvpkit.xp;
 
 import fr.olympa.api.utils.observable.Observable.Observer;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
+import net.md_5.bungee.api.ChatColor;
 
 public class XPManagement implements Observer {
 	
@@ -125,6 +126,18 @@ public class XPManagement implements Observer {
 	
 	public static int getXPToLevelUp(int level) {
 		return XP_PER_LEVEL[level];
+	}
+	
+	public static ChatColor getLevelColor(int level) {
+		if (level >= 70) return ChatColor.GOLD;
+		if (level >= 50) return ChatColor.LIGHT_PURPLE;
+		if (level >= 30) return ChatColor.BLUE;
+		if (level >= 10) return ChatColor.GREEN;
+		return ChatColor.GRAY;
+	}
+	
+	public static String getLevelPrefix(int level) {
+		return getLevelColor(level).toString() + "[lvl " + level + "]";
 	}
 	
 }
