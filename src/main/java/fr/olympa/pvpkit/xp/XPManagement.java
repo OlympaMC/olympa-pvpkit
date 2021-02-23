@@ -6,7 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class XPManagement implements Observer {
 	
-	private static final int[] XP_PER_LEVEL =
+	public static final int[] XP_PER_LEVEL =
 			{
 					-1,
 					20,
@@ -107,7 +107,8 @@ public class XPManagement implements Observer {
 					7760,
 					7890,
 					8020,
-					8150 };
+					8150,
+					Short.MAX_VALUE };
 	
 	private OlympaPlayerPvPKit player;
 	
@@ -117,15 +118,19 @@ public class XPManagement implements Observer {
 	
 	@Override
 	public void changed() throws Exception {
-		int xpToLevelUp = getXPToLevelUp(player.getLevel().get());
-		if (player.getXP().get() >= xpToLevelUp) {
-			player.getLevel().increment();
-			player.getXP().set(Math.max(0, player.getXP().get() - xpToLevelUp));
+		int xpToLevelUp = getXPToLevelUp(player.getLevel());
+		if (player.getXP() >= xpToLevelUp) {
+			player.setLevel(player.getLevel() + 1);
+			player.setXP(player.getXP() - xpToLevelUp);
 		}
 	}
 	
 	public static int getXPToLevelUp(int level) {
 		return XP_PER_LEVEL[level];
+	}
+	
+	public static String formatExperience(int xp) {
+		return xp >= Short.MAX_VALUE ? "∞" : Integer.toString(xp);
 	}
 	
 	public static ChatColor getLevelColor(int level) {

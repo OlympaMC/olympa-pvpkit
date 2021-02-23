@@ -24,7 +24,7 @@ public class LevelManagement implements Observer {
 	@Override
 	public void changed() throws Exception {
 		Player p = player.getPlayer();
-		int newLevel = player.getLevel().get();
+		int newLevel = player.getLevel();
 		Prefix.DEFAULT_GOOD.sendMessage(p, "Félicitations ! §lTu passes au niveau §2%d§a§l !", newLevel);
 		Bukkit.getOnlinePlayers().stream().filter(x -> x != p).forEach(x -> Prefix.DEFAULT_GOOD.sendMessage(x, "§l%s §apasse au niveau %d !", p.getName(), newLevel));
 		

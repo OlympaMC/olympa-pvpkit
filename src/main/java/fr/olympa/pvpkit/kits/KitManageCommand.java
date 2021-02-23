@@ -26,7 +26,7 @@ public class KitManageCommand extends ComplexCommand {
 		addArgumentParser("KIT", new ArgumentParser<>((sender, arg) -> OlympaPvPKit.getInstance().kits.getKits().stream().map(Kit::getId).collect(Collectors.toList()), x -> OlympaPvPKit.getInstance().kits.getKit(x), x -> "Le kit " + x + " est introuvable", false));
 	}
 	
-	@Cmd (min = 1, syntax = "<id> <niveau> [nom]", description = "Créer un kit", args = { "", "INTEGER", "" })
+	@Cmd (min = 2, syntax = "<id> <niveau> [nom]", description = "Créer un kit", args = { "", "INTEGER", "" })
 	public void add(CommandContext cmd) {
 		String id = cmd.getArgument(0);
 		if (OlympaPvPKit.getInstance().kits.getKit(id) != null) {
@@ -41,6 +41,7 @@ public class KitManageCommand extends ComplexCommand {
 			}catch (SQLException | IOException e) {
 				e.printStackTrace();
 				Prefix.ERROR.sendMessage(player, "Une erreur est survenue lors de la création du kit.");
+				player.getInventory().addItem(items);
 			}
 		}).create(player);
 	}
@@ -60,6 +61,24 @@ public class KitManageCommand extends ComplexCommand {
 			kit.setItems(items);
 			Prefix.DEFAULT_GOOD.sendMessage(player, "Le kit %s a été modifié. (%d items)", kit.getId(), kit.getItems().length);
 		}).create(player);
+	}
+	
+	@Cmd (min = 2, args = "KIT", syntax = "<id> <description d'un item>", description = "Ajouter une description d'item")
+	public void addItemDescription(CommandContext cmd) {
+		Kit kit = cmd.getArgument(0);
+		kit.addItemDescription(cmd.getFrom(1));
+		sendSuccess("Une description d'item a été rajoutée au kit %s.", kit.getId());
+	}
+	
+	@Cmd (min = 2, args = { "KIT", "INTEGER" }, syntax = "<id> <index de la description>", description = "Supprimer une description d'item")
+	public void removeItemDescription(CommandContext cmd) {
+		Kit kit = cmd.getArgument(0);
+		try {
+			kit.removeItemDescription(cmd.getArgument(1));
+			sendSuccess("Une description d'item a été supprimée du kit %s.", kit.getId());
+		}catch (IndexOutOfBoundsException ex) {
+			sendError("L'index spécifié est invalide.");
+		}
 	}
 	
 	@Cmd (min = 2, args = { "KIT", "INTEGER" }, syntax = "<id> <nouveau niveau>", description = "Modifier le niveau du kit")

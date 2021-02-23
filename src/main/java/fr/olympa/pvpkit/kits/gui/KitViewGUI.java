@@ -20,16 +20,16 @@ public class KitViewGUI extends OlympaGUI {
 		for (int i = 0; i < kit.getItems().length; i++) {
 			inv.setItem(i, kit.getItems()[i]);
 		}
-		inv.setItem(13, ItemUtils.item(Material.OAK_DOOR, "§a← Revenir à la liste"));
-		inv.setItem(15, ItemUtils.item(Material.DIAMOND, "§b✦ Prendre ce kit"));
+		inv.setItem(12, ItemUtils.item(Material.OAK_DOOR, "§a← Revenir à la liste"));
+		inv.setItem(14, ItemUtils.item(Material.DIAMOND, "§b✦ Prendre ce kit"));
 	}
 	
 	@Override
 	public boolean onClick(Player p, ItemStack current, int slot, ClickType click) {
-		if (slot == 13) {
-			new KitListGUI().create(p);
-		}else if (slot == 15) {
-			OlympaPlayerPvPKit olympaPlayer = OlympaPlayerPvPKit.get(p);
+		OlympaPlayerPvPKit olympaPlayer = OlympaPlayerPvPKit.get(p);
+		if (slot == 12) {
+			new KitListGUI(olympaPlayer).create(p);
+		}else if (slot == 14) {
 			if (kit.canTake(olympaPlayer)) {
 				kit.give(olympaPlayer, p);
 			}else {

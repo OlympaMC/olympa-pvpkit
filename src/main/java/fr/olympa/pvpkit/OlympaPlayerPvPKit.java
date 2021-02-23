@@ -64,12 +64,20 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 		return killStreak;
 	}
 	
-	public ObservableInt getLevel() {
-		return level;
+	public int getLevel() {
+		return level.get();
 	}
 	
-	public ObservableInt getXP() {
-		return xp;
+	public void setLevel(int level) {
+		this.level.set(Math.min(Math.max(level, 1), XPManagement.XP_PER_LEVEL.length));
+	}
+	
+	public int getXP() {
+		return xp.get();
+	}
+	
+	public void setXP(int xp) {
+		this.xp.set(Math.min(Math.max(xp, 0), Short.MAX_VALUE));
 	}
 	
 	public boolean isInPvPZone() {

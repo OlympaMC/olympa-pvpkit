@@ -7,7 +7,6 @@ import org.bukkit.plugin.Plugin;
 import fr.olympa.api.command.complex.Cmd;
 import fr.olympa.api.command.complex.CommandContext;
 import fr.olympa.api.command.complex.ComplexCommand;
-import fr.olympa.api.utils.observable.ObservableInt;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
 import fr.olympa.pvpkit.PvPKitPermissions;
 
@@ -43,9 +42,13 @@ public class LevelCommand extends ComplexCommand {
 			sendError("Donnée invalide: %s. Accepté: xp/level", type);
 			return;
 		}
-		ObservableInt data = xp ? player.getXP() : player.getLevel();
-		data.add(amount);
-		sendSuccess("%s a reçu %d %s.", player.getName(), amount, xp ? "xp" : "niveaux");
+		if (xp) {
+			player.setXP(player.getXP() + amount);
+			sendSuccess("%s a reçu %d xp.", player.getName(), amount);
+		}else {
+			player.setLevel(player.getLevel() + amount);
+			sendSuccess("%s a reçu %d niveaux.", player.getName(), amount);
+		}
 	}
 	
 	@Cmd (permissionName = "LEVEL_COMMAND_MANAGE", min = 3, args = { "PLAYERS", "INTEGER", "xp|level" }, syntax = "<joueur> <quantité> <xp/level>")
@@ -62,15 +65,19 @@ public class LevelCommand extends ComplexCommand {
 			sendError("Donnée invalide: %s. Accepté: xp/level", type);
 			return;
 		}
-		ObservableInt data = xp ? player.getXP() : player.getLevel();
-		data.set(amount);
-		sendSuccess("%s a maintenant %d %s.", player.getName(), amount, xp ? "xp" : "niveaux");
+		if (xp) {
+			player.setXP(amount);
+			sendSuccess("%s a maintenant %d xp.", player.getName(), amount);
+		}else {
+			player.setLevel(amount);
+			sendSuccess("%s a maintenant %d niveaux.", player.getName(), amount);
+		}
 	}
 	
 	public void sendXP(OlympaPlayerPvPKit player) {
 		sendSuccess("Expérience de %s:"
 				+ "\n§e➤ Niveau: %d"
-				+ "\n§e➤ Expérience: %d/%d ", player.getName(), player.getLevel().get(), player.getXP().get(), XPManagement.getXPToLevelUp(player.getLevel().get()));
+				+ "\n§e➤ Expérience: %d/%d ", player.getName(), player.getLevel(), XPManagement.formatExperience(player.getXP()), XPManagement.formatExperience(XPManagement.getXPToLevelUp(player.getLevel())));
 	}
 	
 }

@@ -1,6 +1,9 @@
 package fr.olympa.pvpkit.kits;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,13 +19,15 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
 	private String id, name;
 	private ItemStack[] items;
-	private ItemStack icon, iconGUI;
+	private List<String> itemsDescription;
+	private ItemStack icon, iconGUIGood, iconGUIBad;
 	private int minLevel;
 	
-	protected Kit(String id, String name, ItemStack[] items, ItemStack icon, int minLevel) {
+	protected Kit(String id, String name, ItemStack[] items, String[] itemsDescription, ItemStack icon, int minLevel) {
 		this.id = id;
 		this.name = name;
 		this.items = items;
+		this.itemsDescription = new ArrayList<>(Arrays.asList(itemsDescription));
 		this.icon = icon;
 		this.minLevel = minLevel;
 		refreshIconGUI();
@@ -59,22 +64,41 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void addItemDescription(String item) {
+		this.itemsDescription.add(item);
+		refreshItemsDescription();
+	}
+	
+	public void removeItemDescription(int index) throws IndexOutOfBoundsException {
+		this.itemsDescription.remove(index);
+		refreshItemsDescription();
+	}
+	
+	private void refreshItemsDescription() {
+		OlympaPvPKit.getInstance().kits.columnItemsDescription.updateAsync(this, String.join("||", itemsDescription), null, null);
 		refreshIconGUI();
 	}
 	
-	public ItemStack getIconGUI() {
-		return iconGUI;
+	public ItemStack getIconGUI(boolean good) {
+		return good ? iconGUIGood : iconGUIBad;
 	}
 	
 	private void refreshIconGUI() {
 		int i = 0;
-		String[] lore = new String[items.length + 4];
+		String[] lore = new String[items.length + 6];
 		lore[i++] = "";
-		for (ItemStack item : items) lore[i++] = "§8● " + ItemUtils.getName(item);
+		for (String item : itemsDescription) lore[i++] = "§8● §7" + item;
+		lore[i++] = "";
+		int validityIndex = i++;
 		lore[i++] = "";
 		lore[i++] = "§8§lClic droit> §7voir le contenu";
 		lore[i++] = "§8§lClic gauche> §7§lsélectionner le kit";
-		this.iconGUI = ItemUtils.name(ItemUtils.lore(icon.clone(), lore), name);
+		lore[validityIndex] = "§a✔ §7Niveau " + minLevel;
+		iconGUIGood = ItemUtils.name(ItemUtils.lore(icon.clone(), lore), name);
+		lore[validityIndex] = "§c✖ §7Niveau " + minLevel;
+		iconGUIBad = ItemUtils.name(ItemUtils.lore(icon.clone(), lore), name);
 	}
 	
 	public ItemStack getIcon() {
@@ -112,12 +136,14 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
 	@Override
 	public boolean canTake(OlympaPlayerPvPKit player) {
-		return !player.isInPvPZone() && player.getLevel().get() >= minLevel;
+		return !player.isInPvPZone() && player.getLevel() >= minLevel;
 	}
 	
 	@Override
 	public void sendImpossibleToTake(OlympaPlayerPvPKit player) {
-		Prefix.DEFAULT_BAD.sendMessage(player.getPlayer(), "Tu ne peux pas prendre de kit si tu es déjà en combat !");
+		if (player.getLevel() < minLevel) {
+			Prefix.DEFAULT_BAD.sendMessage(player.getPlayer(), "Tu dois être niveau %d pour pouvoir prendre ce kit !", minLevel);
+		}else Prefix.DEFAULT_BAD.sendMessage(player.getPlayer(), "Tu ne peux pas prendre de kit si tu es déjà en combat !");
 	}
 	
 	@Override

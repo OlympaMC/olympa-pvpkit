@@ -61,10 +61,10 @@ public class PvPKitListener implements Listener {
 			}
 			
 			Prefix.DEFAULT_GOOD.sendMessage(killer, "§eTu gagnes §6§l%d xp§e !", xpGain);
-			killerOP.getXP().add(xpGain);
+			killerOP.setXP(killerOP.getXP() + xpGain);
 			killerOP.getGameMoney().give(xpGain);
 				
-			e.setDeathMessage("§4➤ §c" + dead.getName() + "(" + deadOP.getUsedKit().getId() + ") s'est fait tuer par " + killer.getName() + " (" + killerOP.getUsedKit().getName() + ")");
+			e.setDeathMessage("§4➤ §c" + dead.getName() + " (" + deadOP.getUsedKit().getId() + ") s'est fait tuer par " + killer.getName() + " (" + killerOP.getUsedKit().getId() + ")");
 		}else {
 			e.setDeathMessage("§4➤ §c" + dead.getName() + " est mort.");
 		}
@@ -79,7 +79,7 @@ public class PvPKitListener implements Listener {
 	@EventHandler (priority = EventPriority.HIGH)
 	public void onChat(AsyncPlayerChatEvent e) {
 		OlympaPlayerPvPKit player = OlympaPlayerPvPKit.get(e.getPlayer());
-		e.setFormat(XPManagement.getLevelPrefix(player.getLevel().get()) + " " + player.getGroupPrefix() + "%s " + player.getGroup().getChatSuffix() + " %s");
+		e.setFormat(XPManagement.getLevelPrefix(player.getLevel()) + " " + player.getGroupPrefix() + "%s " + player.getGroup().getChatSuffix() + " %s");
 	}
 	
 	@EventHandler
@@ -103,7 +103,7 @@ public class PvPKitListener implements Listener {
 	public void onInteract(PlayerInteractEvent e) {
 		if (e.getHand() == EquipmentSlot.HAND) {
 			if (MENU_ITEM.equals(e.getItem())) {
-				new KitListGUI().create(e.getPlayer());
+				new KitListGUI(OlympaPlayerPvPKit.get(e.getPlayer())).create(e.getPlayer());
 			}
 		}
 	}

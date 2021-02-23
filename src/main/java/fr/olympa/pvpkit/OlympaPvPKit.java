@@ -48,7 +48,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 	public ScoreboardManager<OlympaPlayerPvPKit> scoreboards;
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineMoney = new DynamicLine<>(x -> "§7Monnaie: §6" + x.getOlympaPlayer().getGameMoney().getFormatted());
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKillStreak = new DynamicLine<>(x -> "§7Killstreak: §6" + x.getOlympaPlayer().getKillStreak().get());
-	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineLevel = new DynamicLine<>(x -> "§7Niveau: §6" + x.getOlympaPlayer().getLevel().get() + " §e(" + x.getOlympaPlayer().getXP().get() + "/" + XPManagement.getXPToLevelUp(x.getOlympaPlayer().getLevel().get()) + ")");
+	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineLevel = new DynamicLine<>(x -> "§7Niveau: §6" + x.getOlympaPlayer().getLevel() + " §e(" + XPManagement.formatExperience(x.getOlympaPlayer().getXP()) + "/" + XPManagement.formatExperience(XPManagement.getXPToLevelUp(x.getOlympaPlayer().getLevel())) + ")");
 	
 	public Location pvpLocation;
 	public Region safeZone;
@@ -76,7 +76,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 			new KitCommand<OlympaPlayerPvPKit>(this, () -> kits.getKits().stream().map(IKit.class::cast)) {
 				@Override
 				protected void noArgument() {
-					new KitListGUI().create(getPlayer());
+					new KitListGUI(getOlympaPlayer()).create(getPlayer());
 				}
 			}.register();
 		}catch (SQLException e) {
@@ -99,7 +99,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		Bukkit.getPluginManager().registerEvents(new PvPKitListener(), this);
 		Bukkit.getPluginManager().registerEvents(combat = new CombatManager(this, 15), this);
 		
-		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendPrefix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel().get())));
+		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendPrefix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel())));
 		
 		pvpLocation = getConfig().getLocation("pvpLocation");
 		safeZone = getConfig().getSerializable("safeZone", Region.class);

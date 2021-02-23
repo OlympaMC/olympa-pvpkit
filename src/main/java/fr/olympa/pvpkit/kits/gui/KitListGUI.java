@@ -12,23 +12,26 @@ import fr.olympa.pvpkit.kits.Kit;
 
 public class KitListGUI extends PagedGUI<Kit> {
 	
-	public KitListGUI() {
+	private OlympaPlayerPvPKit player;
+	
+	public KitListGUI(OlympaPlayerPvPKit player) {
 		super("Kits", DyeColor.RED, OlympaPvPKit.getInstance().kits.getKits(), 3);
+		this.player = player;
+		OlympaPvPKit.getInstance().kits.getKits().stream().filter(kit -> kit.getMinLevel() > player.getLevel()).forEach(kit -> updateObjectItem(kit, kit.getIconGUI(false)));
 	}
 	
 	@Override
 	public ItemStack getItemStack(Kit kit) {
-		return kit.getIconGUI();
+		return kit.getIconGUI(player == null || (kit.getMinLevel() <= player.getLevel()));
 	}
 
 	@Override
 	public void click(Kit kit, Player p, ClickType click) {
 		if (click.isLeftClick()) {
-			OlympaPlayerPvPKit olympaPlayer = OlympaPlayerPvPKit.get(p);
-			if (kit.canTake(olympaPlayer)) {
-				kit.give(olympaPlayer, p);
+			if (kit.canTake(player)) {
+				kit.give(player, p);
 			}else {
-				kit.sendImpossibleToTake(olympaPlayer);
+				kit.sendImpossibleToTake(player);
 			}
 		}else if (click.isRightClick()) {
 			new KitViewGUI(kit).create(p);
