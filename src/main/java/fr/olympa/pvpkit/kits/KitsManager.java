@@ -31,8 +31,9 @@ public class KitsManager {
 		table = new SQLTable<>("pvpkit_kits", Arrays.asList(columnId, columnName, columnItems, columnItemsDescription, columnIcon, columnLevel), set -> {
 			try {
 				String itemsDescription = set.getString("items_description");
-				return new Kit(set.getString("id"), set.getString("name"), ItemUtils.deserializeItemsArray(set.getBytes("items")), itemsDescription == null ? new String[0] : itemsDescription.split("\\|\\|"), SpigotUtils.deserialize(set.getBytes("icon")), set.getInt("level"));
-			}catch (SQLException | ClassNotFoundException | IOException ex) {
+				return new Kit(set.getString("id"), set.getString("name"), ItemUtils.deserializeItemsArray(set.getBytes("items")), (itemsDescription == null || itemsDescription.isEmpty()) ? new String[0]
+						: itemsDescription.split("\\|\\|"), SpigotUtils.deserialize(set.getBytes("icon")), set.getInt("level"));
+			}catch (ClassNotFoundException | IOException ex) {
 				ex.printStackTrace();
 			}
 			return null;

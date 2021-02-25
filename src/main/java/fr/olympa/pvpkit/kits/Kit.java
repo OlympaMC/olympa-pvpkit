@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
 
 import fr.olympa.api.command.essentials.KitCommand.IKit;
 import fr.olympa.api.item.ItemUtils;
@@ -19,6 +23,8 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
 	private String id, name;
 	private ItemStack[] items;
+	private ItemStack[] cachedItems;
+	private PotionEffect[] cachedPotions;
 	private List<String> itemsDescription;
 	private ItemStack icon, iconGUIGood, iconGUIBad;
 	private int minLevel;
@@ -31,6 +37,7 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 		this.icon = icon;
 		this.minLevel = minLevel;
 		refreshIconGUI();
+		refreshItems();
 	}
 	
 	@Override
@@ -64,6 +71,24 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
+		refreshItems();
+	}
+	
+	private void refreshItems() {
+		List<ItemStack> realItems = new ArrayList<>(items.length);
+		List<PotionEffect> potionItems = new ArrayList<>(2);
+		for (ItemStack item : items) {
+			if (item.getType() == Material.POTION) {
+				PotionMeta meta = (PotionMeta) item.getItemMeta();
+				PotionData data = meta.getBasePotionData();
+				if (data.getType().getEffectType() != null) {
+					potionItems.add(new PotionEffect(data.getType().getEffectType(), 9999999, data.isUpgraded() ? 1 : 0, false, false));
+				}
+				meta.getCustomEffects().forEach(potionItems::add);
+			}else realItems.add(item);
+		}
+		cachedItems = realItems.toArray(ItemStack[]::new);
+		cachedPotions = potionItems.toArray(PotionEffect[]::new);
 	}
 	
 	public void addItemDescription(String item) {
@@ -87,7 +112,7 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
 	private void refreshIconGUI() {
 		int i = 0;
-		String[] lore = new String[items.length + 6];
+		String[] lore = new String[itemsDescription.size() + 6];
 		lore[i++] = "";
 		for (String item : itemsDescription) lore[i++] = "§8● §7" + item;
 		lore[i++] = "";
@@ -127,7 +152,8 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	@Override
 	public void give(OlympaPlayerPvPKit olympaPlayer, Player p) {
 		p.getInventory().clear();
-		SpigotUtils.giveItems(p, items);
+		SpigotUtils.giveItems(p, cachedItems);
+		for (PotionEffect effect : cachedPotions) p.addPotionEffect(effect);
 		olympaPlayer.setInPvPZone(this);
 		p.closeInventory();
 		p.teleport(OlympaPvPKit.getInstance().pvpLocation);

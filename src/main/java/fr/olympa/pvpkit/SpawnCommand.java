@@ -22,7 +22,6 @@ public class SpawnCommand extends OlympaCommand {
 		Player player = getPlayer();
 		OlympaPlayerPvPKit oplayer = getOlympaPlayer();
 		oplayer.setInPvPZone(null);
-		player.getInventory().clear();
 		PvPKitListener.giveMenuItem(player);
 		player.teleport(player.getWorld().getSpawnLocation());
 		sendSuccess("Bienvenue au spawn !");
