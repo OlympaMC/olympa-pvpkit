@@ -38,6 +38,8 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	
 	public OlympaPlayerPvPKit(UUID uuid, String name, String ip) {
 		super(uuid, name, ip);
+		level.observe("xp_bar", () -> getPlayer().setLevel(level.get()));
+		xp.observe("xp_bar", () -> getPlayer().setExp((float) xp.get() / (float) XPManagement.getXPToLevelUp(level.get())));
 	}
 	
 	@Override

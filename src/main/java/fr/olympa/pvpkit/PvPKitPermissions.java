@@ -15,4 +15,6 @@ public class PvPKitPermissions {
 	public static final OlympaSpigotPermission LEVEL_COMMAND_OTHER = new OlympaSpigotPermission(OlympaGroup.ASSISTANT);
 	public static final OlympaSpigotPermission LEVEL_COMMAND_MANAGE = new OlympaSpigotPermission(OlympaGroup.RESP);
 	
+	public static final OlympaSpigotPermission SPAWNPOINT_COMMAND_MANAGE = new OlympaSpigotPermission(OlympaGroup.RESP);
+	
 }

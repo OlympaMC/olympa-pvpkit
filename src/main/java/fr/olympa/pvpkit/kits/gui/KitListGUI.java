@@ -1,5 +1,7 @@
 package fr.olympa.pvpkit.kits.gui;
 
+import java.util.ArrayList;
+
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -15,7 +17,7 @@ public class KitListGUI extends PagedGUI<Kit> {
 	private OlympaPlayerPvPKit player;
 	
 	public KitListGUI(OlympaPlayerPvPKit player) {
-		super("Kits", DyeColor.RED, OlympaPvPKit.getInstance().kits.getKits(), 3);
+		super("Kits", DyeColor.RED, new ArrayList<>(OlympaPvPKit.getInstance().kits.getKits()), 3);
 		this.player = player;
 		OlympaPvPKit.getInstance().kits.getKits().stream().filter(kit -> kit.getMinLevel() > player.getLevel()).forEach(kit -> updateObjectItem(kit, kit.getIconGUI(false)));
 	}

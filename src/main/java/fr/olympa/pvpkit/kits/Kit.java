@@ -3,10 +3,12 @@ package fr.olympa.pvpkit.kits;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
@@ -24,6 +26,7 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	private String id, name;
 	private ItemStack[] items;
 	private ItemStack[] cachedItems;
+	private EnumMap<EquipmentSlot, ItemStack> cachedEquipment;
 	private PotionEffect[] cachedPotions;
 	private List<String> itemsDescription;
 	private ItemStack icon, iconGUIGood, iconGUIBad;
@@ -77,7 +80,9 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	private void refreshItems() {
 		List<ItemStack> realItems = new ArrayList<>(items.length);
 		List<PotionEffect> potionItems = new ArrayList<>(2);
+		cachedEquipment = new EnumMap<>(EquipmentSlot.class);
 		for (ItemStack item : items) {
+			String itemType = item.getType().name();
 			if (item.getType() == Material.POTION) {
 				PotionMeta meta = (PotionMeta) item.getItemMeta();
 				PotionData data = meta.getBasePotionData();
@@ -85,6 +90,14 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 					potionItems.add(new PotionEffect(data.getType().getEffectType(), 9999999, data.isUpgraded() ? 1 : 0, false, false));
 				}
 				meta.getCustomEffects().forEach(potionItems::add);
+			}else if (itemType.endsWith("_HELMET")) {
+				cachedEquipment.put(EquipmentSlot.HEAD, item);
+			}else if (itemType.endsWith("_CHESTPLATE")) {
+				cachedEquipment.put(EquipmentSlot.CHEST, item);
+			}else if (itemType.endsWith("_LEGGINGS")) {
+				cachedEquipment.put(EquipmentSlot.LEGS, item);
+			}else if (itemType.endsWith("_BOOTS")) {
+				cachedEquipment.put(EquipmentSlot.FEET, item);
 			}else realItems.add(item);
 		}
 		cachedItems = realItems.toArray(ItemStack[]::new);
@@ -154,9 +167,11 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 		p.getInventory().clear();
 		SpigotUtils.giveItems(p, cachedItems);
 		for (PotionEffect effect : cachedPotions) p.addPotionEffect(effect);
+		cachedEquipment.forEach((slot, item) -> p.getInventory().setItem(slot, item));
 		olympaPlayer.setInPvPZone(this);
 		p.closeInventory();
-		p.teleport(OlympaPvPKit.getInstance().pvpLocation);
+		
+		p.teleport(OlympaPvPKit.getInstance().spawnPoints.getRandomLocation());
 		Prefix.DEFAULT_GOOD.sendMessage(p, "Tu as reçu le kit %s ! Bon combat !", id);
 	}
 	

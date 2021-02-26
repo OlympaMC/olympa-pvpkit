@@ -13,6 +13,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import fr.olympa.api.item.ItemUtils;
@@ -72,6 +74,10 @@ public class PvPKitListener implements Listener {
 				
 				e.setDeathMessage("§4➤ §c" + dead.getName() + " (" + deadKit.getId() + ") s'est fait tuer par " + killer.getName() + " (" + killerKit.getId() + ")");
 				legitKill = true;
+				
+				if (killer.getHealth() < 15) {
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 10, 0));
+				}
 			}
 		}
 		if (!legitKill) e.setDeathMessage("§4➤ §c" + dead.getName() + " est mort.");
@@ -103,6 +109,7 @@ public class PvPKitListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		giveMenuItem(e.getPlayer());
+		e.getPlayer().setLevel(1);
 	}
 	
 	@EventHandler
@@ -118,6 +125,7 @@ public class PvPKitListener implements Listener {
 		p.getInventory().clear();
 		p.getActivePotionEffects().forEach(x -> p.removePotionEffect(x.getType()));
 		p.getInventory().setItem(4, MENU_ITEM);
+		p.getInventory().setHeldItemSlot(4);
 	}
 	
 }

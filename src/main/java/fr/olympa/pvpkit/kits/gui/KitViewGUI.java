@@ -15,13 +15,13 @@ public class KitViewGUI extends OlympaGUI {
 	private Kit kit;
 	
 	public KitViewGUI(Kit kit) {
-		super("Kit " + kit.getId(), 2);
+		super("Kit " + kit.getId(), kit.getItems().length <= 9 ? 2 : 3);
 		this.kit = kit;
 		for (int i = 0; i < kit.getItems().length; i++) {
 			inv.setItem(i, kit.getItems()[i]);
 		}
-		inv.setItem(12, ItemUtils.item(Material.OAK_DOOR, "§a← Revenir à la liste"));
-		inv.setItem(14, ItemUtils.item(Material.DIAMOND, "§b✦ Prendre ce kit"));
+		inv.setItem(inv.getSize() - 6, ItemUtils.item(Material.OAK_DOOR, "§a← Revenir à la liste"));
+		inv.setItem(inv.getSize() - 4, ItemUtils.item(Material.DIAMOND, "§b✦ Prendre ce kit"));
 	}
 	
 	@Override

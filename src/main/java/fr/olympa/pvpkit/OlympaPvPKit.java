@@ -44,6 +44,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 	
 	public KitsManager kits;
 	private CombatManager combat;
+	public SpawnPointsManager spawnPoints;
 	
 	public ScoreboardManager<OlympaPlayerPvPKit> scoreboards;
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineMoney = new DynamicLine<>(x -> "§7Monnaie: §6" + x.getOlympaPlayer().getGameMoney().getFormatted());
@@ -105,6 +106,12 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		safeZone = getConfig().getSerializable("safeZone", Region.class);
 		OlympaCore.getInstance().getRegionManager().registerRegion(safeZone, "safeZone", EventPriority.HIGH, new DamageFlag(false));
 		
+		try {
+			spawnPoints = new SpawnPointsManager();
+			new SpawnPointCommand(this).register();
+		}catch (SQLException ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	@Override

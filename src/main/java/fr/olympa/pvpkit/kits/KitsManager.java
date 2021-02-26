@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -25,7 +25,7 @@ public class KitsManager {
 	public final SQLColumn<Kit> columnIcon = new SQLColumn<Kit>("icon", "VARBINARY(8000)", Types.VARBINARY).setUpdatable();
 	public final SQLColumn<Kit> columnLevel = new SQLColumn<Kit>("level", "SMALLINT DEFAULT 1", Types.SMALLINT).setUpdatable().setNotDefault();
 	
-	private final List<Kit> kits;
+	private final Set<Kit> kits = new TreeSet<>((o1, o2) -> Integer.compare(o1.getMinLevel(), o2.getMinLevel()));
 
 	public KitsManager() throws SQLException {
 		table = new SQLTable<>("pvpkit_kits", Arrays.asList(columnId, columnName, columnItems, columnItemsDescription, columnIcon, columnLevel), set -> {
@@ -39,12 +39,11 @@ public class KitsManager {
 			return null;
 		}).createOrAlter();
 		
-		kits = table.selectAll();
-		Collections.sort(kits, (o1, o2) -> Integer.compare(o1.getMinLevel(), o2.getMinLevel()));
+		kits.addAll(table.selectAll());
 		OlympaPvPKit.getInstance().sendMessage("%d kits chargés !", kits.size());
 	}
 	
-	public List<Kit> getKits() {
+	public Set<Kit> getKits() {
 		return kits;
 	}
 	

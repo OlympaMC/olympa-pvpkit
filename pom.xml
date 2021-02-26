@@ -36,10 +36,10 @@
 
 	<build>
 		<defaultGoal>clean package</defaultGoal>
-		<sourceDirectory>${basedir}/src/java/</sourceDirectory>
+		<sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
 		<resources>
 			<resource>
-				<directory>src/resources</directory>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
 	</build>
