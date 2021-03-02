@@ -31,6 +31,11 @@ import fr.olympa.core.spigot.OlympaCore;
 import fr.olympa.pvpkit.kits.KitManageCommand;
 import fr.olympa.pvpkit.kits.KitsManager;
 import fr.olympa.pvpkit.kits.gui.KitListGUI;
+import fr.olympa.pvpkit.ranking.BestKillStreakRank;
+import fr.olympa.pvpkit.ranking.TotalKillRank;
+import fr.olympa.pvpkit.spawning.SpawnCommand;
+import fr.olympa.pvpkit.spawning.SpawnPointCommand;
+import fr.olympa.pvpkit.spawning.SpawnPointsManager;
 import fr.olympa.pvpkit.xp.LevelCommand;
 import fr.olympa.pvpkit.xp.XPManagement;
 
@@ -49,7 +54,11 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 	public ScoreboardManager<OlympaPlayerPvPKit> scoreboards;
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineMoney = new DynamicLine<>(x -> "§7Monnaie: §6" + x.getOlympaPlayer().getGameMoney().getFormatted());
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKillStreak = new DynamicLine<>(x -> "§7Killstreak: §6" + x.getOlympaPlayer().getKillStreak().get());
+	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKills = new DynamicLine<>(x -> "§7Kills: §6" + x.getOlympaPlayer().getKills().get());
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineLevel = new DynamicLine<>(x -> "§7Niveau: §6" + x.getOlympaPlayer().getLevel() + " §e(" + XPManagement.formatExperience(x.getOlympaPlayer().getXP()) + "/" + XPManagement.formatExperience(XPManagement.getXPToLevelUp(x.getOlympaPlayer().getLevel())) + ")");
+	
+	public TotalKillRank totalKillRank;
+	public BestKillStreakRank bestKSRank;
 	
 	public Location pvpLocation;
 	public Region safeZone;
@@ -83,15 +92,14 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		new MoneyCommand<OlympaPlayerPvPKit>(this, "money", "Gérer son porte-monnaie.", PvPKitPermissions.MONEY_COMMAND, PvPKitPermissions.MONEY_COMMAND_OTHER, PvPKitPermissions.MONEY_COMMAND_MANAGE, "monnaie").register();
-		new LevelCommand(this).register();
-		new SpawnCommand(this).register();
 		
 		scoreboards = new ScoreboardManager<OlympaPlayerPvPKit>(this, "§6Olympa §e§lPvP-Kits").addLines(
 				FixedLine.EMPTY_LINE,
 				lineMoney,
 				FixedLine.EMPTY_LINE,
 				lineKillStreak,
+				lineKills,
+				FixedLine.EMPTY_LINE,
 				lineLevel)
 				.addFooters(
 				FixedLine.EMPTY_LINE,
@@ -99,8 +107,6 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		
 		Bukkit.getPluginManager().registerEvents(new PvPKitListener(), this);
 		Bukkit.getPluginManager().registerEvents(combat = new CombatManager(this, 15), this);
-		
-		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendPrefix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel())));
 		
 		pvpLocation = getConfig().getLocation("pvpLocation");
 		safeZone = getConfig().getSerializable("safeZone", Region.class);
@@ -112,6 +118,20 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		}catch (SQLException ex) {
 			ex.printStackTrace();
 		}
+		
+		try {
+			totalKillRank = new TotalKillRank(getConfig().getLocation("rankingHolograms.totalKills"));
+			bestKSRank = new BestKillStreakRank(getConfig().getLocation("rankingHolograms.bestKS"));
+		}catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		
+		new MoneyCommand<OlympaPlayerPvPKit>(this, "money", "Gérer son porte-monnaie.", PvPKitPermissions.MONEY_COMMAND, PvPKitPermissions.MONEY_COMMAND_OTHER, PvPKitPermissions.MONEY_COMMAND_MANAGE, "monnaie").register();
+		new LevelCommand(this).register();
+		new SpawnCommand(this).register();
+		
+		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendPrefix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel())));
+		
 	}
 	
 	@Override

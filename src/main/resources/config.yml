@@ -1,5 +1,9 @@
 pvpLocation: world -94 91 32 -90 0
 
+rankingHolograms:
+  totalKills: world -147.5 7.5 -318
+  bestKS: world -142.5 7.5 -318
+
 safeZone:
   ==: fr.olympa.api.region.shapes.ExpandedCuboid
   world: "world"

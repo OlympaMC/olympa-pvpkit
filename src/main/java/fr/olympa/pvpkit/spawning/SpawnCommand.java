@@ -1,4 +1,4 @@
-package fr.olympa.pvpkit;
+package fr.olympa.pvpkit.spawning;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import org.bukkit.plugin.Plugin;
 
 import fr.olympa.api.command.OlympaCommand;
 import fr.olympa.api.permission.OlympaSpigotPermission;
+import fr.olympa.pvpkit.OlympaPlayerPvPKit;
+import fr.olympa.pvpkit.PvPKitListener;
 
 public class SpawnCommand extends OlympaCommand {
 	

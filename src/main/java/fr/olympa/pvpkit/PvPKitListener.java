@@ -71,12 +71,13 @@ public class PvPKitListener implements Listener {
 				Prefix.DEFAULT_GOOD.sendMessage(killer, "§eTu gagnes §6§l%d xp§e !", xpGain);
 				killerOP.setXP(killerOP.getXP() + xpGain);
 				killerOP.getGameMoney().give(xpGain);
+				killerOP.getKills().increment();
 				
 				e.setDeathMessage("§4➤ §c" + dead.getName() + " (" + deadKit.getId() + ") s'est fait tuer par " + killer.getName() + " (" + killerKit.getId() + ")");
 				legitKill = true;
 				
 				if (killer.getHealth() < 15) {
-					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 10, 0));
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 10 * 20, 0));
 				}
 			}
 		}

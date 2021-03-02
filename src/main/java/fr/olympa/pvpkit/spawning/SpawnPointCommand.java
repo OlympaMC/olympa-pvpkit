@@ -1,4 +1,4 @@
-package fr.olympa.pvpkit;
+package fr.olympa.pvpkit.spawning;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
 import fr.olympa.api.command.OlympaCommand;
+import fr.olympa.pvpkit.OlympaPvPKit;
+import fr.olympa.pvpkit.PvPKitPermissions;
 
 public class SpawnPointCommand extends OlympaCommand {
 	

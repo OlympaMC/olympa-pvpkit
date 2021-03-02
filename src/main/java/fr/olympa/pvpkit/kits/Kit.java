@@ -164,15 +164,17 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	
 	@Override
 	public void give(OlympaPlayerPvPKit olympaPlayer, Player p) {
-		p.getInventory().clear();
-		SpigotUtils.giveItems(p, cachedItems);
-		for (PotionEffect effect : cachedPotions) p.addPotionEffect(effect);
-		cachedEquipment.forEach((slot, item) -> p.getInventory().setItem(slot, item));
-		olympaPlayer.setInPvPZone(this);
-		p.closeInventory();
-		
-		p.teleport(OlympaPvPKit.getInstance().spawnPoints.getRandomLocation());
-		Prefix.DEFAULT_GOOD.sendMessage(p, "Tu as reçu le kit %s ! Bon combat !", id);
+		//Bukkit.getScheduler().runTaskAsynchronously(OlympaPvPKit.getInstance(), () -> {
+			p.teleport(OlympaPvPKit.getInstance().spawnPoints.getBestLocation());
+			p.getInventory().clear();
+			SpigotUtils.giveItems(p, cachedItems);
+			for (PotionEffect effect : cachedPotions) p.addPotionEffect(effect);
+			cachedEquipment.forEach((slot, item) -> p.getInventory().setItem(slot, item));
+			olympaPlayer.setInPvPZone(this);
+			p.closeInventory();
+			p.getTargetBlockExact(3);
+			Prefix.DEFAULT_GOOD.sendMessage(p, "Tu as reçu le kit %s ! Bon combat !", id);
+			//});
 	}
 	
 	@Override
