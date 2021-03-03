@@ -42,8 +42,6 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	
 	public OlympaPlayerPvPKit(UUID uuid, String name, String ip) {
 		super(uuid, name, ip);
-		level.observe("xp_bar", () -> getPlayer().setLevel(level.get()));
-		xp.observe("xp_bar", () -> getPlayer().setExp((float) xp.get() / (float) XPManagement.getXPToLevelUp(level.get())));
 	}
 	
 	@Override
@@ -61,9 +59,11 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 		level.observe("levelManagement", new LevelManagement(this));
 		level.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineLevel.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
 		level.observe("tab_update", () -> OlympaCore.getInstance().getNameTagApi().callNametagUpdate(this));
+		level.observe("xp_bar", this::updateXPBar);
 		xp.observe("datas", () -> COLUMN_XP.updateAsync(this, xp.get(), null, null));
 		xp.observe("xpManagement", new XPManagement(this));
 		xp.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineLevel.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
+		xp.observe("xp_bar", this::updateXPBar);
 		kills.observe("datas", () -> COLUMN_KILLS.updateAsync(this, kills.get(), null, null));
 		kills.observe("ranking", () -> OlympaPvPKit.getInstance().totalKillRank.handleNewScore(getName(), kills.get()));
 		kills.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineKills.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
@@ -98,6 +98,12 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 		this.xp.set(Math.min(Math.max(xp, 0), Short.MAX_VALUE));
 	}
 	
+	public void updateXPBar() {
+		Player p = getPlayer();
+		p.setLevel(level.get());
+		p.setExp((float) xp.get() / (float) XPManagement.getXPToLevelUp(level.get()));
+	}
+	
 	public ObservableInt getKills() {
 		return kills;
 	}
@@ -122,6 +128,7 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 		level.set(resultSet.getInt("level"));
 		xp.set(resultSet.getInt("xp"));
 		kills.set(resultSet.getInt("kills"));
+		updateXPBar();
 	}
 	
 	public static OlympaPlayerPvPKit get(Player p) {

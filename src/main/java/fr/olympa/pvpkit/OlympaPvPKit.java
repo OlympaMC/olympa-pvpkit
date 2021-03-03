@@ -20,6 +20,7 @@ import fr.olympa.api.provider.AccountProvider;
 import fr.olympa.api.region.Region;
 import fr.olympa.api.region.tracking.flags.DamageFlag;
 import fr.olympa.api.region.tracking.flags.DropFlag;
+import fr.olympa.api.region.tracking.flags.FrostWalkerFlag;
 import fr.olympa.api.region.tracking.flags.GameModeFlag;
 import fr.olympa.api.region.tracking.flags.ItemDurabilityFlag;
 import fr.olympa.api.region.tracking.flags.PhysicsFlag;
@@ -78,6 +79,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 				new PlayerBlocksFlag(true),
 				new GameModeFlag(GameMode.ADVENTURE),
 				new DropFlag(true),
+				new FrostWalkerFlag(false),
 				new PlayerBlockInteractFlag(false, true, true)));
 		
 		try {

@@ -110,7 +110,6 @@ public class PvPKitListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		giveMenuItem(e.getPlayer());
-		e.getPlayer().setLevel(1);
 	}
 	
 	@EventHandler
@@ -127,6 +126,7 @@ public class PvPKitListener implements Listener {
 		p.getActivePotionEffects().forEach(x -> p.removePotionEffect(x.getType()));
 		p.getInventory().setItem(4, MENU_ITEM);
 		p.getInventory().setHeldItemSlot(4);
+		OlympaPlayerPvPKit.get(p).updateXPBar();
 	}
 	
 }
