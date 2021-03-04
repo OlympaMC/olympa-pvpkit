@@ -46,7 +46,7 @@ public abstract class AbstractRank {
 			ScoreEntry score = scores[slot];
 			if (name.equals(score.name)) {
 				if (score.score < scoreValue) {
-					System.arraycopy(scores, slot + 1, scores, slot, scores.length - slot); // supprimer cette entrée et tout décaler d'un cran à gauche
+					System.arraycopy(scores, slot + 1, scores, slot, scores.length - slot - 1); // supprimer cette entrée et tout décaler d'un cran à gauche
 					scoreLines[slot].updateGlobal();
 				}
 				break;

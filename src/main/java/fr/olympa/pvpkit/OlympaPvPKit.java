@@ -28,6 +28,7 @@ import fr.olympa.api.region.tracking.flags.PlayerBlockInteractFlag;
 import fr.olympa.api.region.tracking.flags.PlayerBlocksFlag;
 import fr.olympa.api.scoreboard.sign.Scoreboard;
 import fr.olympa.api.scoreboard.sign.ScoreboardManager;
+import fr.olympa.api.utils.spigot.TeleportationManager;
 import fr.olympa.core.spigot.OlympaCore;
 import fr.olympa.pvpkit.kits.KitManageCommand;
 import fr.olympa.pvpkit.kits.KitsManager;
@@ -51,6 +52,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 	public KitsManager kits;
 	private CombatManager combat;
 	public SpawnPointsManager spawnPoints;
+	public TeleportationManager teleportationManager;
 	
 	public ScoreboardManager<OlympaPlayerPvPKit> scoreboards;
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineMoney = new DynamicLine<>(x -> "§7Monnaie: §6" + x.getOlympaPlayer().getGameMoney().getFormatted());
@@ -127,6 +129,8 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		}catch (SQLException ex) {
 			ex.printStackTrace();
 		}
+		
+		teleportationManager = new TeleportationManager(this, PvPKitPermissions.TP_TIME_BYPASS);
 		
 		new MoneyCommand<OlympaPlayerPvPKit>(this, "money", "Gérer son porte-monnaie.", PvPKitPermissions.MONEY_COMMAND, PvPKitPermissions.MONEY_COMMAND_OTHER, PvPKitPermissions.MONEY_COMMAND_MANAGE, "monnaie").register();
 		new LevelCommand(this).register();

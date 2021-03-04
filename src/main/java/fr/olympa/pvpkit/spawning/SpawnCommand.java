@@ -9,7 +9,9 @@ import org.bukkit.plugin.Plugin;
 
 import fr.olympa.api.command.OlympaCommand;
 import fr.olympa.api.permission.OlympaSpigotPermission;
+import fr.olympa.api.utils.Prefix;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
+import fr.olympa.pvpkit.OlympaPvPKit;
 import fr.olympa.pvpkit.PvPKitListener;
 
 public class SpawnCommand extends OlympaCommand {
@@ -22,11 +24,10 @@ public class SpawnCommand extends OlympaCommand {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player player = getPlayer();
-		OlympaPlayerPvPKit oplayer = getOlympaPlayer();
-		oplayer.setInPvPZone(null);
-		PvPKitListener.giveMenuItem(player);
-		player.teleport(player.getWorld().getSpawnLocation());
-		sendSuccess("Bienvenue au spawn !");
+		OlympaPvPKit.getInstance().teleportationManager.teleport(player, player.getWorld().getSpawnLocation(), Prefix.DEFAULT_GOOD.formatMessage("Bienvenue au spawn !"), () -> {
+			OlympaPlayerPvPKit.get(player).setInPvPZone(null);
+			PvPKitListener.giveMenuItem(player);
+		});
 		return false;
 	}
 	

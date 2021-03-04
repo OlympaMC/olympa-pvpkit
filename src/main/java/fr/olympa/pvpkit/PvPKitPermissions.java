@@ -5,6 +5,10 @@ import fr.olympa.api.permission.OlympaSpigotPermission;
 
 public class PvPKitPermissions {
 	
+	private PvPKitPermissions() {}
+	
+	public static final OlympaSpigotPermission TP_TIME_BYPASS = new OlympaSpigotPermission(OlympaGroup.RESP);
+	
 	public static final OlympaSpigotPermission KIT_MANAGE_COMMAND = new OlympaSpigotPermission(OlympaGroup.GAMEMASTER);
 	
 	public static final OlympaSpigotPermission MONEY_COMMAND = new OlympaSpigotPermission(OlympaGroup.PLAYER);

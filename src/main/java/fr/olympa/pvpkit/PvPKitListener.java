@@ -2,12 +2,19 @@ package fr.olympa.pvpkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -73,11 +80,14 @@ public class PvPKitListener implements Listener {
 				killerOP.getGameMoney().give(xpGain);
 				killerOP.getKills().increment();
 				
-				e.setDeathMessage("§4➤ §c" + dead.getName() + " (" + deadKit.getId() + ") s'est fait tuer par " + killer.getName() + " (" + killerKit.getId() + ")");
+				boolean afar = dead.getLastDamageCause().getCause() == DamageCause.PROJECTILE;
+				//e.setDeathMessage("§4➤ §c§l" + dead.getName() + "§c (" + deadKit.getId() + ") §7s'est fait tuer par §4§l" + killer.getName() + "§c (" + killerKit.getId() + ")");
+				e.setDeathMessage("§4☠ §l" + killer.getName() + "§4 (" + killerKit.getId() + ") §7" + (afar ? "🏹" : "⚔") + " §c§l" + dead.getName() + "§c (" + deadKit.getId() + ")");
 				legitKill = true;
 				
 				if (killer.getHealth() < 15) {
-					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 10 * 20, 0));
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 12 * 20, (int) (Math.floor(15D - killer.getHealth()) / 3D)));
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 8, 1));
 				}
 			}
 		}
@@ -88,6 +98,23 @@ public class PvPKitListener implements Listener {
 		
 		e.setDroppedExp(0);
 		e.getDrops().clear();
+	}
+	
+	@EventHandler
+	public void onHit(ProjectileHitEvent e) {
+		if (e.getHitBlock() != null && e.getEntity() instanceof AbstractArrow && !(e.getEntity() instanceof Trident)) {
+			e.getEntity().remove();
+		}
+	}
+	
+	@EventHandler
+	public void onItemSpawn(ItemSpawnEvent e) {
+		e.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onFish(PlayerFishEvent e) {
+		if (e.getState() == PlayerFishEvent.State.BITE) e.setCancelled(true);
 	}
 	
 	@EventHandler (priority = EventPriority.HIGH)
@@ -119,6 +146,11 @@ public class PvPKitListener implements Listener {
 				new KitListGUI(OlympaPlayerPvPKit.get(e.getPlayer())).create(e.getPlayer());
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onClick(InventoryClickEvent e) {
+		if (e.getInventory() == e.getWhoClicked().getInventory()) e.setCancelled(true);
 	}
 	
 	public static void giveMenuItem(Player p) {
