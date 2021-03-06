@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.olympa.api.command.essentials.KitCommand.IKit;
 import fr.olympa.api.item.ItemUtils;
@@ -167,12 +169,14 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 		//Bukkit.getScheduler().runTaskAsynchronously(OlympaPvPKit.getInstance(), () -> {
 			p.teleport(OlympaPvPKit.getInstance().spawnPoints.getBestLocation());
 			p.getInventory().clear();
+			p.getInventory().setHeldItemSlot(0);
 			SpigotUtils.giveItems(p, cachedItems);
 			for (PotionEffect effect : cachedPotions) p.addPotionEffect(effect);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 999999, 0, false, false));
 			cachedEquipment.forEach((slot, item) -> p.getInventory().setItem(slot, item));
 			olympaPlayer.setInPvPZone(this);
 			p.closeInventory();
-			p.getTargetBlockExact(3);
+			p.setGameMode(GameMode.ADVENTURE);
 			Prefix.DEFAULT_GOOD.sendMessage(p, "Tu as reçu le kit %s ! Bon combat !", id);
 			//});
 	}

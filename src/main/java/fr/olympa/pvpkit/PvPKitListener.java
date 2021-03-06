@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
@@ -42,8 +43,8 @@ public class PvPKitListener implements Listener {
 		boolean legitKill = false;
 		
 		OlympaPlayerPvPKit deadOP = OlympaPlayerPvPKit.get(dead);
+		int deadKS = deadOP.getKillStreak().get();
 		if (killer != null) {
-			int deadKS = deadOP.getKillStreak().get();
 			Kit deadKit = deadOP.getUsedKit();
 			OlympaPlayerPvPKit killerOP = OlympaPlayerPvPKit.get(killer);
 			Kit killerKit = killerOP.getUsedKit();
@@ -82,22 +83,25 @@ public class PvPKitListener implements Listener {
 				
 				boolean afar = dead.getLastDamageCause().getCause() == DamageCause.PROJECTILE;
 				//e.setDeathMessage("§4➤ §c§l" + dead.getName() + "§c (" + deadKit.getId() + ") §7s'est fait tuer par §4§l" + killer.getName() + "§c (" + killerKit.getId() + ")");
-				e.setDeathMessage("§4☠ §l" + killer.getName() + "§4 (" + killerKit.getId() + ") §7" + (afar ? "🏹" : "⚔") + " §c§l" + dead.getName() + "§c (" + deadKit.getId() + ")");
+				e.setDeathMessage("§c☠ §l" + dead.getName() + "§c (" + deadKit.getId() + ") §7" + (afar ? "🏹" : "⚔") + " §4§l" + killer.getName() + "§4 (" + killerKit.getId() + ") §7~ killstreak §l" + killerOP.getKillStreak().get());
 				legitKill = true;
 				
 				if (killer.getHealth() < 15) {
-					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 12 * 20, (int) (Math.floor(15D - killer.getHealth()) / 3D)));
-					killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 8, 1));
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 11 * 20, (int) (Math.floor(15D - killer.getHealth()) / 4D)));
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 6 * 20, 1));
 				}
 			}
+			
 		}
-		if (!legitKill) e.setDeathMessage("§4➤ §c" + dead.getName() + " est mort.");
+		if (!legitKill) e.setDeathMessage("§c☠ §l" + dead.getName() + "§c est mort.");
 		
 		deadOP.getKillStreak().set(0);
 		deadOP.setInPvPZone(null);
 		
 		e.setDroppedExp(0);
 		e.getDrops().clear();
+		
+		Prefix.DEFAULT.sendMessage(dead, "Tu es mort... Ton killstreak: §l%d", deadKS);
 	}
 	
 	@EventHandler
@@ -125,7 +129,7 @@ public class PvPKitListener implements Listener {
 	
 	@EventHandler
 	public void onJoinLocation(PlayerSpawnLocationEvent e) {
-		e.setSpawnLocation(Bukkit.getWorld("world").getSpawnLocation());
+		if (!e.getPlayer().hasPlayedBefore()) e.setSpawnLocation(Bukkit.getWorld("world").getSpawnLocation());
 	}
 	
 	@EventHandler
@@ -136,6 +140,19 @@ public class PvPKitListener implements Listener {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		if (p.hasPlayedBefore()) {
+			if (p.getPersistentDataContainer().has(CustomWorldNBTStorage.PLAYER_KIT, PersistentDataType.STRING)) {
+				String kitID = p.getPersistentDataContainer().get(CustomWorldNBTStorage.PLAYER_KIT, PersistentDataType.STRING);
+				if (kitID != null) {
+					Kit kit = OlympaPvPKit.getInstance().kits.getKit(kitID);
+					OlympaPlayerPvPKit.get(p).setInPvPZone(kit);
+					return;
+				}
+			}
+			p.teleport(p.getWorld().getSpawnLocation());
+			OlympaPvPKit.getInstance().sendMessage("§cLe joueur %s a des données mais pas de kit sauvegardé.", p.getName());
+		}
 		giveMenuItem(e.getPlayer());
 	}
 	
@@ -150,7 +167,7 @@ public class PvPKitListener implements Listener {
 	
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
-		if (e.getInventory() == e.getWhoClicked().getInventory()) e.setCancelled(true);
+		if (MENU_ITEM.equals(e.getCurrentItem())) e.setCancelled(true);
 	}
 	
 	public static void giveMenuItem(Player p) {

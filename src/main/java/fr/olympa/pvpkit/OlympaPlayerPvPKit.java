@@ -87,7 +87,7 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	}
 	
 	public void setLevel(int level) {
-		this.level.set(Math.min(Math.max(level, 1), XPManagement.XP_PER_LEVEL.length));
+		this.level.set(Math.min(Math.max(level, 1), XPManagement.XP_PER_LEVEL.length - 1));
 	}
 	
 	public int getXP() {
@@ -118,6 +118,7 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	
 	public void setInPvPZone(Kit usedKit) {
 		this.usedKit = usedKit;
+		OlympaPvPKit.getInstance().lineKit.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this));
 	}
 	
 	@Override

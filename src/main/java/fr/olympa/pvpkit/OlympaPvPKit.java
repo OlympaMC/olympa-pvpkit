@@ -1,11 +1,13 @@
 package fr.olympa.pvpkit;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.event.EventPriority;
+import org.spigotmc.SpigotConfig;
 
 import fr.olympa.api.CombatManager;
 import fr.olympa.api.command.essentials.KitCommand;
@@ -36,10 +38,11 @@ import fr.olympa.pvpkit.kits.gui.KitListGUI;
 import fr.olympa.pvpkit.ranking.BestKillStreakRank;
 import fr.olympa.pvpkit.ranking.TotalKillRank;
 import fr.olympa.pvpkit.spawning.SpawnCommand;
-import fr.olympa.pvpkit.spawning.SpawnPointCommand;
 import fr.olympa.pvpkit.spawning.SpawnPointsManager;
 import fr.olympa.pvpkit.xp.LevelCommand;
 import fr.olympa.pvpkit.xp.XPManagement;
+import net.minecraft.server.v1_16_R3.MinecraftServer;
+import net.minecraft.server.v1_16_R3.PlayerList;
 
 public class OlympaPvPKit extends OlympaAPIPlugin {
 	
@@ -59,6 +62,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKillStreak = new DynamicLine<>(x -> "§7Killstreak: §6" + x.getOlympaPlayer().getKillStreak().get());
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKills = new DynamicLine<>(x -> "§7Kills: §6" + x.getOlympaPlayer().getKills().get());
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineLevel = new DynamicLine<>(x -> "§7Niveau: §6" + x.getOlympaPlayer().getLevel() + " §e(" + XPManagement.formatExperience(x.getOlympaPlayer().getXP()) + "/" + XPManagement.formatExperience(XPManagement.getXPToLevelUp(x.getOlympaPlayer().getLevel())) + ")");
+	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKit = new DynamicLine<>(x -> "§7Kit: " + (x.getOlympaPlayer().isInPvPZone() ? x.getOlympaPlayer().getUsedKit().getName() : "§8§oaucun"));
 	
 	public TotalKillRank totalKillRank;
 	public BestKillStreakRank bestKSRank;
@@ -66,6 +70,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 	public Location pvpLocation;
 	public Region safeZone;
 	
+	@SuppressWarnings ("deprecation")
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -104,13 +109,16 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 				lineKillStreak,
 				lineKills,
 				FixedLine.EMPTY_LINE,
-				lineLevel)
+				lineLevel,
+				FixedLine.EMPTY_LINE,
+				lineKit)
 				.addFooters(
 				FixedLine.EMPTY_LINE,
 				CyclingLine.olympaAnimation());
 		
 		Bukkit.getPluginManager().registerEvents(new PvPKitListener(), this);
 		Bukkit.getPluginManager().registerEvents(combat = new CombatManager(this, 15), this);
+		combat.setSendMessages(false);
 		
 		pvpLocation = getConfig().getLocation("pvpLocation");
 		safeZone = getConfig().getSerializable("safeZone", Region.class);
@@ -118,10 +126,12 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		
 		try {
 			spawnPoints = new SpawnPointsManager();
-			new SpawnPointCommand(this).register();
+			//new SpawnPointCommand(this).register();
 		}catch (SQLException ex) {
 			ex.printStackTrace();
 		}
+		
+		new SuicideCommand(this).register();
 		
 		try {
 			totalKillRank = new TotalKillRank(getConfig().getLocation("rankingHolograms.totalKills"));
@@ -138,6 +148,24 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		
 		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendPrefix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel())));
 		
+		MinecraftServer server = MinecraftServer.getServer();
+		try {
+			CustomWorldNBTStorage nbtStorage = new CustomWorldNBTStorage(server.convertable, server.getDataFixer());
+			Field field = MinecraftServer.class.getDeclaredField("worldNBTStorage");
+			field.setAccessible(true);
+			field.set(server, nbtStorage);
+			field = PlayerList.class.getDeclaredField("playerFileData");
+			field.setAccessible(true);
+			field.set(server.getPlayerList(), nbtStorage);
+		}catch (ReflectiveOperationException ex) {
+			ex.printStackTrace();
+		}
+		if (server.worldNBTStorage instanceof CustomWorldNBTStorage && server.getPlayerList().playerFileData instanceof CustomWorldNBTStorage) {
+			sendMessage("§aLa gestion custom des données joueurs vanilla est implantée.");
+		}else {
+			sendMessage("§cUn problème est survenu lors de la gestion custom des données joueurs vanilla.");
+			SpigotConfig.disablePlayerDataSaving = true;
+		}
 	}
 	
 	@Override

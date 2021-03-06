@@ -12,6 +12,7 @@ import fr.olympa.api.utils.Prefix;
 import fr.olympa.api.utils.observable.Observable.Observer;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
 import fr.olympa.pvpkit.OlympaPvPKit;
+import net.md_5.bungee.api.ChatColor;
 
 public class LevelManagement implements Observer {
 	
@@ -26,7 +27,11 @@ public class LevelManagement implements Observer {
 		Player p = player.getPlayer();
 		int newLevel = player.getLevel();
 		Prefix.DEFAULT_GOOD.sendMessage(p, "Félicitations ! §lTu passes au niveau §2%d§a§l !", newLevel);
-		Bukkit.getOnlinePlayers().stream().filter(x -> x != p).forEach(x -> Prefix.DEFAULT_GOOD.sendMessage(x, "§l%s §apasse au niveau %d !", p.getName(), newLevel));
+		if (newLevel % 5 == 0) {
+			ChatColor color = XPManagement.getLevelColor(newLevel);
+			String message = "§d§k||§r " + color + p.getName() + "§7 passe au niveau " + color + newLevel + "§7 !";
+			Bukkit.getOnlinePlayers().stream().filter(x -> x != p).forEach(x -> x.sendMessage(message));
+		}
 		
 		Runnable launchFirework = () -> {
 			Firework firework = p.getWorld().spawn(p.getLocation(), Firework.class);
