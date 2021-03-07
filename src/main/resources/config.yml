@@ -11,3 +11,13 @@ safeZone:
   zMin: -340
   xMax: -75
   zMax: -220
+
+killbox:
+  ==: fr.olympa.api.region.shapes.Cuboid
+  world: "world"
+  xMin: 0
+  yMin: 0
+  zMin: 0
+  xMax: 1
+  yMax: 1
+  zMax: 1

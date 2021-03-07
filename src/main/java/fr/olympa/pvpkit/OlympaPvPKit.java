@@ -20,8 +20,10 @@ import fr.olympa.api.permission.OlympaPermission;
 import fr.olympa.api.plugin.OlympaAPIPlugin;
 import fr.olympa.api.provider.AccountProvider;
 import fr.olympa.api.region.Region;
+import fr.olympa.api.region.tracking.ActionResult;
 import fr.olympa.api.region.tracking.flags.DamageFlag;
 import fr.olympa.api.region.tracking.flags.DropFlag;
+import fr.olympa.api.region.tracking.flags.Flag;
 import fr.olympa.api.region.tracking.flags.FrostWalkerFlag;
 import fr.olympa.api.region.tracking.flags.GameModeFlag;
 import fr.olympa.api.region.tracking.flags.ItemDurabilityFlag;
@@ -123,6 +125,12 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		pvpLocation = getConfig().getLocation("pvpLocation");
 		safeZone = getConfig().getSerializable("safeZone", Region.class);
 		OlympaCore.getInstance().getRegionManager().registerRegion(safeZone, "safeZone", EventPriority.HIGH, new DamageFlag(false));
+		OlympaCore.getInstance().getRegionManager().registerRegion(getConfig().getSerializable("killbox", Region.class), "killbox", EventPriority.HIGH, new Flag() {
+			public fr.olympa.api.region.tracking.ActionResult enters(org.bukkit.entity.Player p, java.util.Set<fr.olympa.api.region.tracking.TrackedRegion> to) {
+				getTask().runTask(() -> p.damage(100000));
+				return ActionResult.ALLOW;
+			};
+		});
 		
 		try {
 			spawnPoints = new SpawnPointsManager();

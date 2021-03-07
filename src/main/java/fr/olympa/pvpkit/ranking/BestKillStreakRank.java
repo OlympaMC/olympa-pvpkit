@@ -11,7 +11,17 @@ import fr.olympa.api.sql.statement.OlympaStatement;
 public class BestKillStreakRank extends AbstractRank {
 	
 	public BestKillStreakRank(Location location) throws SQLException {
-		super("total_kill", "§c§lMeilleur kill streak", location);
+		super("total_kill", location);
+	}
+	
+	@Override
+	public String getHologramName() {
+		return "§c§lMeilleur kill streak";
+	}
+	
+	@Override
+	public String getMessageName() {
+		return "du meilleur kill streak";
 	}
 	
 	@Override

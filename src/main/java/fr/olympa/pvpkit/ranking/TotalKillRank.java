@@ -11,7 +11,17 @@ import fr.olympa.api.sql.statement.OlympaStatement;
 public class TotalKillRank extends AbstractRank {
 	
 	public TotalKillRank(Location location) throws SQLException {
-		super("total_kill", "§e§lKills totaux", location);
+		super("total_kill", location);
+	}
+	
+	@Override
+	public String getHologramName() {
+		return "§e§lKills totaux";
+	}
+	
+	@Override
+	public String getMessageName() {
+		return "des kills";
 	}
 	
 	@Override
