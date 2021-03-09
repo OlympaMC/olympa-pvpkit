@@ -40,6 +40,7 @@ import fr.olympa.pvpkit.kits.gui.KitListGUI;
 import fr.olympa.pvpkit.ranking.BestKillStreakRank;
 import fr.olympa.pvpkit.ranking.TotalKillRank;
 import fr.olympa.pvpkit.spawning.SpawnCommand;
+import fr.olympa.pvpkit.spawning.SpawnPointCommand;
 import fr.olympa.pvpkit.spawning.SpawnPointsManager;
 import fr.olympa.pvpkit.xp.LevelCommand;
 import fr.olympa.pvpkit.xp.XPManagement;
@@ -47,41 +48,42 @@ import net.minecraft.server.v1_16_R3.MinecraftServer;
 import net.minecraft.server.v1_16_R3.PlayerList;
 
 public class OlympaPvPKit extends OlympaAPIPlugin {
-	
+
 	private static OlympaPvPKit instance;
-	
+
 	public static OlympaPvPKit getInstance() {
-		return (OlympaPvPKit) instance;
+		return instance;
 	}
-	
+
 	public KitsManager kits;
 	private CombatManager combat;
 	public SpawnPointsManager spawnPoints;
 	public TeleportationManager teleportationManager;
-	
+
 	public ScoreboardManager<OlympaPlayerPvPKit> scoreboards;
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineMoney = new DynamicLine<>(x -> "§7Monnaie: §6" + x.getOlympaPlayer().getGameMoney().getFormatted());
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKillStreak = new DynamicLine<>(x -> "§7Killstreak: §6" + x.getOlympaPlayer().getKillStreak().get());
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKills = new DynamicLine<>(x -> "§7Kills: §6" + x.getOlympaPlayer().getKills().get());
-	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineLevel = new DynamicLine<>(x -> "§7Niveau: §6" + x.getOlympaPlayer().getLevel() + " §e(" + XPManagement.formatExperience(x.getOlympaPlayer().getXP()) + "/" + XPManagement.formatExperience(XPManagement.getXPToLevelUp(x.getOlympaPlayer().getLevel())) + ")");
+	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineLevel = new DynamicLine<>(x -> "§7Niveau: §6" + x.getOlympaPlayer().getLevel() + " §e(" + XPManagement.formatExperience(x.getOlympaPlayer().getXP()) + "/"
+			+ XPManagement.formatExperience(XPManagement.getXPToLevelUp(x.getOlympaPlayer().getLevel())) + ")");
 	public DynamicLine<Scoreboard<OlympaPlayerPvPKit>> lineKit = new DynamicLine<>(x -> "§7Kit: " + (x.getOlympaPlayer().isInPvPZone() ? x.getOlympaPlayer().getUsedKit().getName() : "§8§oaucun"));
-	
+
 	public TotalKillRank totalKillRank;
 	public BestKillStreakRank bestKSRank;
-	
+
 	public Location pvpLocation;
 	public Region safeZone;
-	
-	@SuppressWarnings ("deprecation")
+
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
 		instance = this;
 		super.onEnable();
-		
+
 		OlympaPermission.registerPermissions(PvPKitPermissions.class);
-		
+
 		AccountProvider.setPlayerProvider(OlympaPlayerPvPKit.class, OlympaPlayerPvPKit::new, "pvpkit", OlympaPlayerPvPKit.COLUMNS);
-		
+
 		OlympaCore.getInstance().getRegionManager().awaitWorldTracking("world", e -> e.getRegion().registerFlags(
 				new ItemDurabilityFlag(true),
 				new PhysicsFlag(true),
@@ -90,7 +92,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 				new DropFlag(true),
 				new FrostWalkerFlag(false),
 				new PlayerBlockInteractFlag(false, true, true)));
-		
+
 		try {
 			kits = new KitsManager();
 			new KitManageCommand(this).register();
@@ -100,10 +102,10 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 					new KitListGUI(getOlympaPlayer()).create(getPlayer());
 				}
 			}.register();
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		scoreboards = new ScoreboardManager<OlympaPlayerPvPKit>(this, "§6Olympa §e§lPvP-Kits").addLines(
 				FixedLine.EMPTY_LINE,
 				lineMoney,
@@ -115,47 +117,49 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 				FixedLine.EMPTY_LINE,
 				lineKit)
 				.addFooters(
-				FixedLine.EMPTY_LINE,
-				CyclingLine.olympaAnimation());
-		
+						FixedLine.EMPTY_LINE,
+						CyclingLine.olympaAnimation());
+
 		Bukkit.getPluginManager().registerEvents(new PvPKitListener(), this);
 		Bukkit.getPluginManager().registerEvents(combat = new CombatManager(this, 15), this);
 		combat.setSendMessages(false);
-		
+
 		pvpLocation = getConfig().getLocation("pvpLocation");
 		safeZone = getConfig().getSerializable("safeZone", Region.class);
 		OlympaCore.getInstance().getRegionManager().registerRegion(safeZone, "safeZone", EventPriority.HIGH, new DamageFlag(false));
 		OlympaCore.getInstance().getRegionManager().registerRegion(getConfig().getSerializable("killbox", Region.class), "killbox", EventPriority.HIGH, new Flag() {
+			@Override
 			public fr.olympa.api.region.tracking.ActionResult enters(org.bukkit.entity.Player p, java.util.Set<fr.olympa.api.region.tracking.TrackedRegion> to) {
 				getTask().runTask(() -> p.damage(100000));
 				return ActionResult.ALLOW;
-			};
+			}
 		});
-		
+
 		try {
 			spawnPoints = new SpawnPointsManager();
 			//new SpawnPointCommand(this).register();
-		}catch (SQLException ex) {
+		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		new SuicideCommand(this).register();
-		
+
 		try {
 			totalKillRank = new TotalKillRank(getConfig().getLocation("rankingHolograms.totalKills"));
 			bestKSRank = new BestKillStreakRank(getConfig().getLocation("rankingHolograms.bestKS"));
-		}catch (SQLException ex) {
+		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		teleportationManager = new TeleportationManager(this, PvPKitPermissions.TP_TIME_BYPASS);
-		
+
 		new MoneyCommand<OlympaPlayerPvPKit>(this, "money", "Gérer son porte-monnaie.", PvPKitPermissions.MONEY_COMMAND, PvPKitPermissions.MONEY_COMMAND_OTHER, PvPKitPermissions.MONEY_COMMAND_MANAGE, "monnaie").register();
 		new LevelCommand(this).register();
 		new SpawnCommand(this).register();
-		
+		new SpawnPointCommand(this).register();
+
 		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendPrefix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel())));
-		
+
 		MinecraftServer server = MinecraftServer.getServer();
 		try {
 			CustomWorldNBTStorage nbtStorage = new CustomWorldNBTStorage(server.convertable, server.getDataFixer());
@@ -165,21 +169,21 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 			field = PlayerList.class.getDeclaredField("playerFileData");
 			field.setAccessible(true);
 			field.set(server.getPlayerList(), nbtStorage);
-		}catch (ReflectiveOperationException ex) {
+		} catch (ReflectiveOperationException ex) {
 			ex.printStackTrace();
 		}
-		if (server.worldNBTStorage instanceof CustomWorldNBTStorage && server.getPlayerList().playerFileData instanceof CustomWorldNBTStorage) {
+		if (server.worldNBTStorage instanceof CustomWorldNBTStorage && server.getPlayerList().playerFileData instanceof CustomWorldNBTStorage)
 			sendMessage("§aLa gestion custom des données joueurs vanilla est implantée.");
-		}else {
+		else {
 			sendMessage("§cUn problème est survenu lors de la gestion custom des données joueurs vanilla.");
 			SpigotConfig.disablePlayerDataSaving = true;
 		}
 	}
-	
+
 	@Override
 	public void onDisable() {
 		super.onDisable();
 		combat.unload();
 	}
-	
+
 }
