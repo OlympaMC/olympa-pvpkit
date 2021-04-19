@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import org.bukkit.Location;
 
 import fr.olympa.api.sql.statement.OlympaStatement;
+import fr.olympa.api.utils.spigot.AbstractRank;
 
 public class TotalKillRank extends AbstractRank {
 	
