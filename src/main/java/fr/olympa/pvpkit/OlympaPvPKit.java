@@ -39,7 +39,6 @@ import fr.olympa.pvpkit.kits.KitsManager;
 import fr.olympa.pvpkit.kits.gui.KitListGUI;
 import fr.olympa.pvpkit.ranking.BestKillStreakRank;
 import fr.olympa.pvpkit.ranking.TotalKillRank;
-import fr.olympa.pvpkit.spawning.SpawnCommand;
 import fr.olympa.pvpkit.spawning.SpawnPointCommand;
 import fr.olympa.pvpkit.spawning.SpawnPointsManager;
 import fr.olympa.pvpkit.xp.LevelCommand;
@@ -155,7 +154,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 
 		new MoneyCommand<OlympaPlayerPvPKit>(this, "money", "Gérer son porte-monnaie.", PvPKitPermissions.MONEY_COMMAND, PvPKitPermissions.MONEY_COMMAND_OTHER, PvPKitPermissions.MONEY_COMMAND_MANAGE, "monnaie").register();
 		new LevelCommand(this).register();
-		new SpawnCommand(this).register();
+		//new SpawnCommand(this).register();
 		new SpawnPointCommand(this).register();
 
 		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendPrefix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel())));
