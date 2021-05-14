@@ -157,7 +157,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		//new SpawnCommand(this).register();
 		new SpawnPointCommand(this).register();
 
-		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendPrefix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel())));
+		OlympaCore.getInstance().getNameTagApi().addNametagHandler(EventPriority.LOWEST, (nametag, player, to) -> nametag.appendSuffix(XPManagement.getLevelPrefix(((OlympaPlayerPvPKit) player).getLevel())));
 
 		MinecraftServer server = MinecraftServer.getServer();
 		try {

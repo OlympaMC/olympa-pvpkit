@@ -21,7 +21,7 @@ import fr.olympa.pvpkit.kits.gui.KitEditionGUI;
 public class KitManageCommand extends ComplexCommand {
 	
 	public KitManageCommand(Plugin plugin) {
-		super(plugin, "kitmanage", "Permet de modifier les kits", PvPKitPermissions.KIT_MANAGE_COMMAND);
+		super(plugin, "kitmanage", "Permet de modifier les kits.", PvPKitPermissions.KIT_MANAGE_COMMAND);
 		setAllowConsole(false);
 		addArgumentParser("KIT", new ArgumentParser<>((sender, arg) -> OlympaPvPKit.getInstance().kits.getKits().stream().map(Kit::getId).collect(Collectors.toList()), x -> OlympaPvPKit.getInstance().kits.getKit(x), x -> "Le kit " + x + " est introuvable", false));
 	}

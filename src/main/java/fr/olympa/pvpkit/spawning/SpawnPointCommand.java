@@ -21,7 +21,7 @@ import fr.olympa.pvpkit.PvPKitPermissions;
 public class SpawnPointCommand extends ComplexCommand {
 
 	public SpawnPointCommand(OlympaPvPKit plugin) {
-		super(plugin, "spawnpoint", "Gérer les points de spawns", PvPKitPermissions.SPAWNPOINT_COMMAND_MANAGE, "sp");
+		super(plugin, "spawnpoint", "Gérer les points de spawns.", PvPKitPermissions.SPAWNPOINT_COMMAND_MANAGE, "sp");
 		setAllowConsole(false);
 	}
 
