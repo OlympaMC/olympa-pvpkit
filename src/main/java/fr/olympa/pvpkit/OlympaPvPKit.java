@@ -21,6 +21,7 @@ import fr.olympa.api.plugin.OlympaAPIPlugin;
 import fr.olympa.api.provider.AccountProvider;
 import fr.olympa.api.region.Region;
 import fr.olympa.api.region.tracking.ActionResult;
+import fr.olympa.api.region.tracking.RegionEvent.EntryEvent;
 import fr.olympa.api.region.tracking.flags.DamageFlag;
 import fr.olympa.api.region.tracking.flags.DropFlag;
 import fr.olympa.api.region.tracking.flags.Flag;
@@ -128,8 +129,8 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		OlympaCore.getInstance().getRegionManager().registerRegion(safeZone, "safeZone", EventPriority.HIGH, new DamageFlag(false));
 		OlympaCore.getInstance().getRegionManager().registerRegion(getConfig().getSerializable("killbox", Region.class), "killbox", EventPriority.HIGH, new Flag() {
 			@Override
-			public fr.olympa.api.region.tracking.ActionResult enters(org.bukkit.entity.Player p, java.util.Set<fr.olympa.api.region.tracking.TrackedRegion> to) {
-				getTask().runTask(() -> p.damage(100000));
+			public fr.olympa.api.region.tracking.ActionResult enters(EntryEvent event) {
+				getTask().runTask(() -> event.getPlayer().damage(100000));
 				return ActionResult.ALLOW;
 			}
 		});
