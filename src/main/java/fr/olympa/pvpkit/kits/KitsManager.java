@@ -39,7 +39,7 @@ public class KitsManager {
 			return null;
 		}).createOrAlter();
 		
-		kits.addAll(table.selectAll());
+		kits.addAll(table.selectAll(null));
 		OlympaPvPKit.getInstance().sendMessage("%d kits chargés !", kits.size());
 	}
 	

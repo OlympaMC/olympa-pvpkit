@@ -27,7 +27,7 @@ public class SpawnPointsManager {
 		table = new SQLTable<>("pvpkit_spawnpoints", Arrays.asList(new SQLColumn<Location>("location", "VARCHAR(100)", Types.VARCHAR).setPrimaryKey(SpigotUtils::convertLocationToString)), resultSet -> SpigotUtils.convertStringToLocation(resultSet.getString("location")));
 		table.createOrAlter();
 		
-		locations = table.selectAll();
+		locations = table.selectAll(null);
 	}
 	
 	public List<Location> getLocations() {
