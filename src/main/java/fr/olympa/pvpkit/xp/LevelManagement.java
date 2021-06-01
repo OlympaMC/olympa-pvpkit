@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import fr.olympa.api.utils.Prefix;
-import fr.olympa.api.utils.observable.Observable.Observer;
+import fr.olympa.api.common.observable.Observable.Observer;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
 import fr.olympa.pvpkit.OlympaPvPKit;
 import net.md_5.bungee.api.ChatColor;

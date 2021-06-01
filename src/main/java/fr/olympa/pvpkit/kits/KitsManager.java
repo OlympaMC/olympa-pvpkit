@@ -9,10 +9,10 @@ import java.util.TreeSet;
 
 import org.bukkit.inventory.ItemStack;
 
-import fr.olympa.api.item.ItemUtils;
-import fr.olympa.api.sql.SQLColumn;
-import fr.olympa.api.sql.SQLTable;
-import fr.olympa.api.utils.spigot.SpigotUtils;
+import fr.olympa.api.spigot.item.ItemUtils;
+import fr.olympa.api.common.sql.SQLColumn;
+import fr.olympa.api.common.sql.SQLTable;
+import fr.olympa.api.spigot.utils.SpigotUtils;
 import fr.olympa.pvpkit.OlympaPvPKit;
 
 public class KitsManager {

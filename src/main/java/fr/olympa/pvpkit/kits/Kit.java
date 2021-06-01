@@ -16,10 +16,10 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import fr.olympa.api.command.essentials.KitCommand.IKit;
-import fr.olympa.api.item.ItemUtils;
+import fr.olympa.api.spigot.command.essentials.KitCommand.IKit;
+import fr.olympa.api.spigot.item.ItemUtils;
 import fr.olympa.api.utils.Prefix;
-import fr.olympa.api.utils.spigot.SpigotUtils;
+import fr.olympa.api.spigot.utils.SpigotUtils;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
 import fr.olympa.pvpkit.OlympaPvPKit;
 

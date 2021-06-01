@@ -10,10 +10,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Shulker;
 
-import fr.olympa.api.chat.TxtComponentBuilder;
-import fr.olympa.api.command.complex.Cmd;
-import fr.olympa.api.command.complex.CommandContext;
-import fr.olympa.api.command.complex.ComplexCommand;
+import fr.olympa.api.common.chat.TxtComponentBuilder;
+import fr.olympa.api.common.command.complex.Cmd;
+import fr.olympa.api.common.command.complex.CommandContext;
+import fr.olympa.api.spigot.command.ComplexCommand;
 import fr.olympa.api.utils.Prefix;
 import fr.olympa.pvpkit.OlympaPvPKit;
 import fr.olympa.pvpkit.PvPKitPermissions;

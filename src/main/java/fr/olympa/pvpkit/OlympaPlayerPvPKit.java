@@ -9,12 +9,12 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import fr.olympa.api.economy.MoneyPlayerInterface;
-import fr.olympa.api.economy.OlympaMoney;
-import fr.olympa.api.provider.AccountProvider;
-import fr.olympa.api.provider.OlympaPlayerObject;
-import fr.olympa.api.sql.SQLColumn;
-import fr.olympa.api.utils.observable.ObservableInt;
+import fr.olympa.api.spigot.economy.MoneyPlayerInterface;
+import fr.olympa.api.spigot.economy.OlympaMoney;
+import fr.olympa.api.common.provider.AccountProvider;
+import fr.olympa.api.common.provider.OlympaPlayerObject;
+import fr.olympa.api.common.sql.SQLColumn;
+import fr.olympa.api.common.observable.ObservableInt;
 import fr.olympa.core.spigot.OlympaCore;
 import fr.olympa.pvpkit.kits.Kit;
 import fr.olympa.pvpkit.xp.LevelManagement;

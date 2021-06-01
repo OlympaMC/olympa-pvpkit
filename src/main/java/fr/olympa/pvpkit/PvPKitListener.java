@@ -25,7 +25,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
-import fr.olympa.api.item.ItemUtils;
+import fr.olympa.api.spigot.item.ItemUtils;
 import fr.olympa.api.utils.Prefix;
 import fr.olympa.pvpkit.kits.Kit;
 import fr.olympa.pvpkit.kits.gui.KitListGUI;

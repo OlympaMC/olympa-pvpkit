@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-import fr.olympa.api.gui.templates.PagedGUI;
+import fr.olympa.api.spigot.gui.templates.PagedGUI;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
 import fr.olympa.pvpkit.OlympaPvPKit;
 import fr.olympa.pvpkit.kits.Kit;

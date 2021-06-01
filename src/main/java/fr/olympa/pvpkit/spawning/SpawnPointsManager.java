@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import fr.olympa.api.sql.SQLColumn;
-import fr.olympa.api.sql.SQLTable;
-import fr.olympa.api.utils.spigot.SpigotUtils;
+import fr.olympa.api.common.sql.SQLColumn;
+import fr.olympa.api.common.sql.SQLTable;
+import fr.olympa.api.spigot.utils.SpigotUtils;
 import fr.olympa.pvpkit.OlympaPvPKit;
 
 public class SpawnPointsManager {

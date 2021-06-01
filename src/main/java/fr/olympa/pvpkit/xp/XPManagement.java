@@ -1,6 +1,6 @@
 package fr.olympa.pvpkit.xp;
 
-import fr.olympa.api.utils.observable.Observable.Observer;
+import fr.olympa.api.common.observable.Observable.Observer;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
 import net.md_5.bungee.api.ChatColor;
 

@@ -8,7 +8,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import com.mojang.datafixers.DataFixer;
 
-import fr.olympa.api.provider.AccountProvider;
+import fr.olympa.api.common.provider.AccountProvider;
 import net.minecraft.server.v1_16_R3.Convertable.ConversionSession;
 import net.minecraft.server.v1_16_R3.EntityHuman;
 import net.minecraft.server.v1_16_R3.WorldNBTStorage;

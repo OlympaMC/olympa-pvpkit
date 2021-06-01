@@ -9,31 +9,31 @@ import org.bukkit.Location;
 import org.bukkit.event.EventPriority;
 import org.spigotmc.SpigotConfig;
 
-import fr.olympa.api.CombatManager;
-import fr.olympa.api.command.essentials.KitCommand;
-import fr.olympa.api.command.essentials.KitCommand.IKit;
-import fr.olympa.api.economy.MoneyCommand;
-import fr.olympa.api.lines.CyclingLine;
-import fr.olympa.api.lines.DynamicLine;
-import fr.olympa.api.lines.FixedLine;
-import fr.olympa.api.permission.OlympaPermission;
-import fr.olympa.api.plugin.OlympaAPIPlugin;
-import fr.olympa.api.provider.AccountProvider;
-import fr.olympa.api.region.Region;
-import fr.olympa.api.region.tracking.ActionResult;
-import fr.olympa.api.region.tracking.RegionEvent.EntryEvent;
-import fr.olympa.api.region.tracking.flags.DamageFlag;
-import fr.olympa.api.region.tracking.flags.DropFlag;
-import fr.olympa.api.region.tracking.flags.Flag;
-import fr.olympa.api.region.tracking.flags.FrostWalkerFlag;
-import fr.olympa.api.region.tracking.flags.GameModeFlag;
-import fr.olympa.api.region.tracking.flags.ItemDurabilityFlag;
-import fr.olympa.api.region.tracking.flags.PhysicsFlag;
-import fr.olympa.api.region.tracking.flags.PlayerBlockInteractFlag;
-import fr.olympa.api.region.tracking.flags.PlayerBlocksFlag;
-import fr.olympa.api.scoreboard.sign.Scoreboard;
-import fr.olympa.api.scoreboard.sign.ScoreboardManager;
-import fr.olympa.api.utils.spigot.TeleportationManager;
+import fr.olympa.api.common.permission.OlympaPermission;
+import fr.olympa.api.common.plugin.OlympaAPIPlugin;
+import fr.olympa.api.common.provider.AccountProvider;
+import fr.olympa.api.spigot.CombatManager;
+import fr.olympa.api.spigot.command.essentials.KitCommand;
+import fr.olympa.api.spigot.command.essentials.KitCommand.IKit;
+import fr.olympa.api.spigot.economy.MoneyCommand;
+import fr.olympa.api.spigot.lines.CyclingLine;
+import fr.olympa.api.spigot.lines.DynamicLine;
+import fr.olympa.api.spigot.lines.FixedLine;
+import fr.olympa.api.spigot.region.Region;
+import fr.olympa.api.spigot.region.tracking.ActionResult;
+import fr.olympa.api.spigot.region.tracking.RegionEvent.EntryEvent;
+import fr.olympa.api.spigot.region.tracking.flags.DamageFlag;
+import fr.olympa.api.spigot.region.tracking.flags.DropFlag;
+import fr.olympa.api.spigot.region.tracking.flags.Flag;
+import fr.olympa.api.spigot.region.tracking.flags.FrostWalkerFlag;
+import fr.olympa.api.spigot.region.tracking.flags.GameModeFlag;
+import fr.olympa.api.spigot.region.tracking.flags.ItemDurabilityFlag;
+import fr.olympa.api.spigot.region.tracking.flags.PhysicsFlag;
+import fr.olympa.api.spigot.region.tracking.flags.PlayerBlockInteractFlag;
+import fr.olympa.api.spigot.region.tracking.flags.PlayerBlocksFlag;
+import fr.olympa.api.spigot.scoreboard.sign.Scoreboard;
+import fr.olympa.api.spigot.scoreboard.sign.ScoreboardManager;
+import fr.olympa.api.spigot.utils.TeleportationManager;
 import fr.olympa.core.spigot.OlympaCore;
 import fr.olympa.pvpkit.kits.KitManageCommand;
 import fr.olympa.pvpkit.kits.KitsManager;
@@ -129,7 +129,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		OlympaCore.getInstance().getRegionManager().registerRegion(safeZone, "safeZone", EventPriority.HIGH, new DamageFlag(false));
 		OlympaCore.getInstance().getRegionManager().registerRegion(getConfig().getSerializable("killbox", Region.class), "killbox", EventPriority.HIGH, new Flag() {
 			@Override
-			public fr.olympa.api.region.tracking.ActionResult enters(EntryEvent event) {
+			public fr.olympa.api.spigot.region.tracking.ActionResult enters(EntryEvent event) {
 				getTask().runTask(() -> event.getPlayer().damage(100000));
 				return ActionResult.ALLOW;
 			}

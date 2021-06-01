@@ -7,8 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import fr.olympa.api.command.OlympaCommand;
-import fr.olympa.api.permission.OlympaSpigotPermission;
+import fr.olympa.api.spigot.command.OlympaCommand;
+import fr.olympa.api.common.permission.OlympaSpigotPermission;
 import fr.olympa.api.utils.Prefix;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
 import fr.olympa.pvpkit.OlympaPvPKit;
