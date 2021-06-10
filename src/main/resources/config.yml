@@ -5,15 +5,15 @@ rankingHolograms:
   bestKS: world -142.5 7.5 -318
 
 safeZone:
-  ==: fr.olympa.api.region.shapes.ExpandedCuboid
+  ==: fr.olympa.api.spigot.region.shapes.ExpandedCuboid
   world: "world"
   xMin: -220
   zMin: -340
   xMax: -75
   zMax: -220
-
+ 
 killbox:
-  ==: fr.olympa.api.region.shapes.Cuboid
+  ==: fr.olympa.api.spigot.region.shapes.Cuboid
   world: "world"
   xMin: -168
   yMin: 55
