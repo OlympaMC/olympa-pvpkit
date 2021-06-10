@@ -28,7 +28,7 @@ public class CustomWorldNBTStorage extends WorldNBTStorage {
 	
 	@Override
 	public void save(EntityHuman entityhuman) {
-		OlympaPlayerPvPKit player = AccountProvider.get(entityhuman.getUniqueID());
+		OlympaPlayerPvPKit player = AccountProvider.getter().get(entityhuman.getUniqueID());
 		if (player == null) return; // appelé après que le joueur soit enlevé du cache
 		if (player.isInPvPZone()) {
 			entityhuman.getBukkitEntity().getPersistentDataContainer().set(PLAYER_KIT, PersistentDataType.STRING, player.getUsedKit().getId());

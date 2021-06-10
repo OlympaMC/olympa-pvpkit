@@ -11,7 +11,7 @@ import org.spigotmc.SpigotConfig;
 
 import fr.olympa.api.common.permission.OlympaPermission;
 import fr.olympa.api.common.plugin.OlympaAPIPlugin;
-import fr.olympa.api.common.provider.AccountProvider;
+import fr.olympa.api.common.provider.AccountProviderAPI;
 import fr.olympa.api.spigot.CombatManager;
 import fr.olympa.api.spigot.command.essentials.KitCommand;
 import fr.olympa.api.spigot.command.essentials.KitCommand.IKit;
@@ -79,10 +79,8 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 	public void onEnable() {
 		instance = this;
 		super.onEnable();
-
 		OlympaPermission.registerPermissions(PvPKitPermissions.class);
-
-		AccountProvider.setPlayerProvider(OlympaPlayerPvPKit.class, OlympaPlayerPvPKit::new, "pvpkit", OlympaPlayerPvPKit.COLUMNS);
+		AccountProviderAPI.getter().setPlayerProvider(OlympaPlayerPvPKit.class, OlympaPlayerPvPKit::new, "pvpkit", OlympaPlayerPvPKit.COLUMNS);
 
 		OlympaCore.getInstance().getRegionManager().awaitWorldTracking("world", e -> e.getRegion().registerFlags(
 				new ItemDurabilityFlag(true),

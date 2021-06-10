@@ -134,7 +134,7 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	}
 	
 	public static OlympaPlayerPvPKit get(Player p) {
-		return AccountProvider.get(p.getUniqueId());
+		return AccountProvider.getter().get(p.getUniqueId());
 	}
 	
 }
