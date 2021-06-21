@@ -1,0 +1,4 @@
+rootProject.name = 'olympa-pvpkit'
+
+include 'olympa-api'
+project(':olympa-api').projectDir = new File(settingsDir, "../olympa-api")
