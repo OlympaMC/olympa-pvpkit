@@ -55,7 +55,7 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 				killStreakMax.set(killStreak.get());
 		});
 		killStreakMax.observe("datas", () -> COLUMN_KILL_STREAK_MAX.updateAsync(this, killStreakMax.get(), null, null));
-		killStreakMax.observe("ranking", () -> OlympaPvPKit.getInstance().bestKSRank.handleNewScore(getName(), getPlayer(), killStreakMax.get()));
+		killStreakMax.observe("ranking", () -> OlympaPvPKit.getInstance().bestKSRank.handleNewScore(getName(), (Player) getPlayer(), killStreakMax.get()));
 		level.observe("datas", () -> COLUMN_LEVEL.updateAsync(this, level.get(), null, null));
 		level.observe("levelManagement", new LevelManagement(this));
 		level.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineLevel.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
@@ -66,7 +66,7 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 		xp.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineLevel.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
 		xp.observe("xp_bar", this::updateXPBar);
 		kills.observe("datas", () -> COLUMN_KILLS.updateAsync(this, kills.get(), null, null));
-		kills.observe("ranking", () -> OlympaPvPKit.getInstance().totalKillRank.handleNewScore(getName(), getPlayer(), kills.get()));
+		kills.observe("ranking", () -> OlympaPvPKit.getInstance().totalKillRank.handleNewScore(getName(), (Player) getPlayer(), kills.get()));
 		kills.observe("scoreboard_update", () -> OlympaPvPKit.getInstance().lineKills.updateHolder(OlympaPvPKit.getInstance().scoreboards.getPlayerScoreboard(this)));
 	}
 
@@ -100,7 +100,7 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	}
 
 	public void updateXPBar() {
-		Player p = getPlayer();
+		Player p = (Player) getPlayer();
 		p.setLevel(level.get());
 		float xpRatio = (float) xp.get() / (float) XPManagement.getXPToLevelUp(level.get());
 		if (xpRatio <= 1)

@@ -189,8 +189,8 @@ public class Kit implements IKit<OlympaPlayerPvPKit> {
 	@Override
 	public void sendImpossibleToTake(OlympaPlayerPvPKit player) {
 		if (player.getLevel() < minLevel) {
-			Prefix.DEFAULT_BAD.sendMessage(player.getPlayer(), "Tu dois être niveau %d pour pouvoir prendre ce kit !", minLevel);
-		}else Prefix.DEFAULT_BAD.sendMessage(player.getPlayer(), "Tu ne peux pas prendre de kit si tu es déjà en combat !");
+			Prefix.DEFAULT_BAD.sendMessage((Player) player.getPlayer(), "Tu dois être niveau %d pour pouvoir prendre ce kit !", minLevel);
+		}else Prefix.DEFAULT_BAD.sendMessage((Player) player.getPlayer(), "Tu ne peux pas prendre de kit si tu es déjà en combat !");
 	}
 	
 	@Override
