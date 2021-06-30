@@ -34,6 +34,7 @@ import fr.olympa.api.spigot.region.tracking.flags.PlayerBlockInteractFlag;
 import fr.olympa.api.spigot.region.tracking.flags.PlayerBlocksFlag;
 import fr.olympa.api.spigot.scoreboard.sign.Scoreboard;
 import fr.olympa.api.spigot.scoreboard.sign.ScoreboardManager;
+import fr.olympa.api.spigot.utils.ProtocolAPI;
 import fr.olympa.api.spigot.utils.TeleportationManager;
 import fr.olympa.core.spigot.OlympaCore;
 import fr.olympa.pvpkit.kits.KitManageCommand;
@@ -81,6 +82,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		instance = this;
 		super.onEnable();
 		OlympaCore.getInstance().setOlympaServer(OlympaServer.PVPKIT);
+		OlympaCore.getInstance().getVersionHandler().disableAllUnderI(ProtocolAPI.V1_8_9);
 		OlympaPermission.registerPermissions(PvPKitPermissions.class);
 		AccountProviderAPI.getter().setPlayerProvider(OlympaPlayerPvPKit.class, OlympaPlayerPvPKit::new, "pvpkit", OlympaPlayerPvPKit.COLUMNS);
 
