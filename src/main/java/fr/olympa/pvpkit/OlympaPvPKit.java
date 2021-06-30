@@ -12,6 +12,7 @@ import org.spigotmc.SpigotConfig;
 import fr.olympa.api.common.permission.OlympaPermission;
 import fr.olympa.api.common.plugin.OlympaAPIPlugin;
 import fr.olympa.api.common.provider.AccountProviderAPI;
+import fr.olympa.api.common.server.OlympaServer;
 import fr.olympa.api.spigot.CombatManager;
 import fr.olympa.api.spigot.command.essentials.KitCommand;
 import fr.olympa.api.spigot.command.essentials.KitCommand.IKit;
@@ -79,6 +80,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 	public void onEnable() {
 		instance = this;
 		super.onEnable();
+		OlympaCore.getInstance().setOlympaServer(OlympaServer.PVPKIT);
 		OlympaPermission.registerPermissions(PvPKitPermissions.class);
 		AccountProviderAPI.getter().setPlayerProvider(OlympaPlayerPvPKit.class, OlympaPlayerPvPKit::new, "pvpkit", OlympaPlayerPvPKit.COLUMNS);
 
