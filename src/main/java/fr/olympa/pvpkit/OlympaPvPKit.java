@@ -23,15 +23,7 @@ import fr.olympa.api.spigot.lines.FixedLine;
 import fr.olympa.api.spigot.region.Region;
 import fr.olympa.api.spigot.region.tracking.ActionResult;
 import fr.olympa.api.spigot.region.tracking.RegionEvent.EntryEvent;
-import fr.olympa.api.spigot.region.tracking.flags.DamageFlag;
-import fr.olympa.api.spigot.region.tracking.flags.DropFlag;
-import fr.olympa.api.spigot.region.tracking.flags.Flag;
-import fr.olympa.api.spigot.region.tracking.flags.FrostWalkerFlag;
-import fr.olympa.api.spigot.region.tracking.flags.GameModeFlag;
-import fr.olympa.api.spigot.region.tracking.flags.ItemDurabilityFlag;
-import fr.olympa.api.spigot.region.tracking.flags.PhysicsFlag;
-import fr.olympa.api.spigot.region.tracking.flags.PlayerBlockInteractFlag;
-import fr.olympa.api.spigot.region.tracking.flags.PlayerBlocksFlag;
+import fr.olympa.api.spigot.region.tracking.flags.*;
 import fr.olympa.api.spigot.scoreboard.sign.Scoreboard;
 import fr.olympa.api.spigot.scoreboard.sign.ScoreboardManager;
 import fr.olympa.api.spigot.utils.ProtocolAPI;
@@ -92,6 +84,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 				new PlayerBlocksFlag(true),
 				new GameModeFlag(GameMode.ADVENTURE),
 				new DropFlag(true),
+				new FoodFlag(true),
 				new FrostWalkerFlag(false),
 				new PlayerBlockInteractFlag(false, true, true)));
 
