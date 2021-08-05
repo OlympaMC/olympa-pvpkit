@@ -25,6 +25,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
+import fr.olympa.api.common.groups.OlympaGroup;
 import fr.olympa.api.spigot.item.ItemUtils;
 import fr.olympa.api.utils.Prefix;
 import fr.olympa.pvpkit.kits.Kit;
@@ -53,7 +54,7 @@ public class PvPKitListener implements Listener {
 				killerOP.getKillStreak().increment();
 				int killerKS = killerOP.getKillStreak().get();
 				
-				int xpGain;
+				double xpGain;
 				if (deadKS >= 30) {
 					xpGain = 5;
 				}else if (deadKS >= 20) {
@@ -74,6 +75,12 @@ public class PvPKitListener implements Listener {
 					xpGain *= 3;
 				}else if (killerKS >= 10) {
 					xpGain *= 2;
+				}
+				
+				if (killerOP.hasGroup(OlympaGroup.PVPKIT_CHAMPION)) {
+					xpGain *= 1.5;
+				}else if (killerOP.hasGroup(OlympaGroup.VIP)) {
+					xpGain *= 1.25;
 				}
 				
 				Prefix.DEFAULT_GOOD.sendMessage(killer, "§eTu gagnes §6§l%d xp§e !", xpGain);

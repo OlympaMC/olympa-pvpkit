@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
+import fr.olympa.api.common.observable.ObservableDouble;
 import fr.olympa.api.common.observable.ObservableInt;
 import fr.olympa.api.common.provider.AccountProviderAPI;
 import fr.olympa.api.common.provider.OlympaPlayerObject;
@@ -35,7 +36,7 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 	private ObservableInt killStreak = new ObservableInt(0);
 	private ObservableInt killStreakMax = new ObservableInt(0);
 	private ObservableInt level = new ObservableInt(1);
-	private ObservableInt xp = new ObservableInt(0);
+	private ObservableDouble xp = new ObservableDouble(0);
 	private ObservableInt kills = new ObservableInt(0);
 
 	private Kit usedKit = null;
@@ -91,18 +92,18 @@ public class OlympaPlayerPvPKit extends OlympaPlayerObject implements MoneyPlaye
 		this.level.set(Math.min(Math.max(level, 1), XPManagement.XP_PER_LEVEL.length - 1));
 	}
 
-	public int getXP() {
+	public double getXP() {
 		return xp.get();
 	}
 
-	public void setXP(int xp) {
+	public void setXP(double xp) {
 		this.xp.set(Math.min(Math.max(xp, 0), Short.MAX_VALUE));
 	}
 
 	public void updateXPBar() {
 		Player p = (Player) getPlayer();
 		p.setLevel(level.get());
-		float xpRatio = (float) xp.get() / (float) XPManagement.getXPToLevelUp(level.get());
+		float xpRatio = xp.getAsFloat() / XPManagement.getXPToLevelUp(level.get());
 		if (xpRatio <= 1)
 			p.setExp(xpRatio);
 	}

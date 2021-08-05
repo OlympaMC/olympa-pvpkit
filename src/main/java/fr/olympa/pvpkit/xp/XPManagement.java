@@ -129,8 +129,8 @@ public class XPManagement implements Observer {
 		return XP_PER_LEVEL[level];
 	}
 	
-	public static String formatExperience(int xp) {
-		return xp >= Short.MAX_VALUE ? "∞" : Integer.toString(xp);
+	public static String formatExperience(double xp) {
+		return xp >= Short.MAX_VALUE ? "∞" : Integer.toString((int) xp);
 	}
 	
 	public static ChatColor getLevelColor(int level) {

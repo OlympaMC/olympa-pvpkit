@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import fr.olympa.api.common.observable.Observable.Observer;
+import fr.olympa.api.spigot.utils.SpigotUtils;
 import fr.olympa.api.utils.Prefix;
 import fr.olympa.pvpkit.OlympaPlayerPvPKit;
 import fr.olympa.pvpkit.OlympaPvPKit;
@@ -40,10 +41,8 @@ public class LevelManagement implements Observer {
 			meta.addEffect(FireworkEffect.builder().with(Type.BURST).withColor(Color.LIME).withFade(Color.GREEN).withTrail().build());
 			firework.setFireworkMeta(meta);
 		};
-		if (Bukkit.isPrimaryThread())
-			launchFirework.run();
-		else
-			Bukkit.getScheduler().runTask(OlympaPvPKit.getInstance(), launchFirework);
+		
+		SpigotUtils.runPrimaryThread(launchFirework, OlympaPvPKit.getInstance());
 	}
 
 }
