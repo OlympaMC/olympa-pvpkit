@@ -2,6 +2,7 @@ package fr.olympa.pvpkit;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -15,7 +16,6 @@ import fr.olympa.api.common.provider.AccountProviderAPI;
 import fr.olympa.api.common.server.OlympaServer;
 import fr.olympa.api.spigot.CombatManager;
 import fr.olympa.api.spigot.command.essentials.KitCommand;
-import fr.olympa.api.spigot.command.essentials.KitCommand.IKit;
 import fr.olympa.api.spigot.economy.MoneyCommand;
 import fr.olympa.api.spigot.lines.CyclingLine;
 import fr.olympa.api.spigot.lines.DynamicLine;
@@ -91,7 +91,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		try {
 			kits = new KitsManager();
 			new KitManageCommand(this).register();
-			new KitCommand<OlympaPlayerPvPKit>(this, () -> kits.getKits().stream().map(IKit.class::cast)) {
+			new KitCommand<OlympaPlayerPvPKit>(this, new ArrayList<>(kits.getKits())) {
 				@Override
 				protected void noArgument() {
 					new KitListGUI(getOlympaPlayer()).create(getPlayer());
