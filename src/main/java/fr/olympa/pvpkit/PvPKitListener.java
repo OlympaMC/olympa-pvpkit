@@ -1,5 +1,7 @@
 package fr.olympa.pvpkit;
 
+import java.text.DecimalFormat;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractArrow;
@@ -35,6 +37,8 @@ import fr.olympa.pvpkit.xp.XPManagement;
 public class PvPKitListener implements Listener {
 	
 	private static final ItemStack MENU_ITEM = ItemUtils.item(Material.NETHER_STAR, "§bSélecteur de Kit", "§8> §7Clique ici pour ouvrir", "  §7le menu des Kits !");
+	
+	private DecimalFormat format = new DecimalFormat("0.#");
 	
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
@@ -83,13 +87,12 @@ public class PvPKitListener implements Listener {
 					xpGain *= 1.25;
 				}
 				
-				Prefix.DEFAULT_GOOD.sendMessage(killer, "§eTu gagnes §6§l%d xp§e !", xpGain);
+				Prefix.DEFAULT_GOOD.sendMessage(killer, "§eTu gagnes §6§l%s xp§e !", format.format(xpGain));
 				killerOP.setXP(killerOP.getXP() + xpGain);
 				killerOP.getGameMoney().give(xpGain);
 				killerOP.getKills().increment();
 				
 				boolean afar = dead.getLastDamageCause().getCause() == DamageCause.PROJECTILE;
-				//e.setDeathMessage("§4➤ §c§l" + dead.getName() + "§c (" + deadKit.getId() + ") §7s'est fait tuer par §4§l" + killer.getName() + "§c (" + killerKit.getId() + ")");
 				e.setDeathMessage("§c☠ §l" + dead.getName() + "§c (" + deadKit.getId() + ") §7" + (afar ? "🏹" : "⚔") + " §4§l" + killer.getName() + "§4 (" + killerKit.getId() + ") §7~ killstreak §l" + killerOP.getKillStreak().get());
 				legitKill = true;
 				
