@@ -97,7 +97,7 @@ public class PvPKitListener implements Listener {
 				legitKill = true;
 				
 				if (killer.getHealth() < 15) {
-					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 11 * 20, (int) (Math.floor(15D - killer.getHealth()) / 4D)));
+					killer.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 10 * 20, (int) (Math.floor(15D - killer.getHealth()) / 5D)));
 					killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 6 * 20, 1));
 				}
 			}
