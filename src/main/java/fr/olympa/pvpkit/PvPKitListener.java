@@ -52,8 +52,9 @@ public class PvPKitListener implements Listener {
 		if (killer != null) {
 			Kit deadKit = deadOP.getUsedKit();
 			OlympaPlayerPvPKit killerOP = OlympaPlayerPvPKit.get(killer);
-			Kit killerKit = killerOP.getUsedKit();
-			
+			Kit killerKit = null;
+			if (killerOP != null)
+				killerKit = killerOP.getUsedKit();
 			if (deadKit != null && killerKit != null) {
 				killerOP.getKillStreak().increment();
 				int killerKS = killerOP.getKillStreak().get();
@@ -93,7 +94,7 @@ public class PvPKitListener implements Listener {
 				killerOP.getKills().increment();
 				
 				boolean afar = dead.getLastDamageCause().getCause() == DamageCause.PROJECTILE;
-				e.setDeathMessage("§c☠ §l" + dead.getName() + "§c (" + deadKit.getId() + ") §7" + (afar ? "🏹" : "⚔") + " §4§l" + killer.getName() + "§4 (" + killerKit.getId() + ") §7~ killstreak §l" + killerOP.getKillStreak().get());
+				e.setDeathMessage("§c☠ §l" + dead.getName() + "§c (" + deadKit.getId() + ") §7" + (afar ? "🏹" : "⚔") + " §4§l" + killer.getName() + "§4 (" + killerKit.getId() + ") §7~ ks §l" + killerOP.getKillStreak().get());
 				legitKill = true;
 				
 				if (killer.getHealth() < 15) {
