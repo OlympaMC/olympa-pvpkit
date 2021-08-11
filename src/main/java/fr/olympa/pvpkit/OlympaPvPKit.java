@@ -10,7 +10,9 @@ import org.bukkit.Location;
 import org.bukkit.event.EventPriority;
 import org.spigotmc.SpigotConfig;
 
+import fr.olympa.api.common.groups.OlympaGroup;
 import fr.olympa.api.common.permission.OlympaPermission;
+import fr.olympa.api.common.permission.list.OlympaAPIPermissionsSpigot;
 import fr.olympa.api.common.plugin.OlympaAPIPlugin;
 import fr.olympa.api.common.provider.AccountProviderAPI;
 import fr.olympa.api.common.server.OlympaServer;
@@ -91,7 +93,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 		try {
 			kits = new KitsManager();
 			new KitManageCommand(this).register();
-			new KitCommand<OlympaPlayerPvPKit>(this, new ArrayList<>(kits.getKits())) {
+			new KitCommand<>(this, new ArrayList<>(kits.getKits())) {
 				@Override
 				protected void noArgument() {
 					new KitListGUI(getOlympaPlayer()).create(getPlayer());
@@ -173,6 +175,12 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 			sendMessage("§cUn problème est survenu lors de la gestion custom des données joueurs vanilla.");
 			SpigotConfig.disablePlayerDataSaving = true;
 		}
+		OlympaAPIPermissionsSpigot.GAMEMODE_COMMAND.setMinGroup(OlympaGroup.MOD);
+		OlympaAPIPermissionsSpigot.FLY_COMMAND.setMinGroup(OlympaGroup.MODP);
+		OlympaAPIPermissionsSpigot.TP_COMMAND_NOT_VANISH.setMinGroup(OlympaGroup.ADMIN);
+		OlympaAPIPermissionsSpigot.GAMEMODE_COMMAND_OTHER.setMinGroup(OlympaGroup.MOD);
+		OlympaAPIPermissionsSpigot.INVSEE_COMMAND_INTERACT.setMinGroup(OlympaGroup.MOD);
+		OlympaAPIPermissionsSpigot.ECSEE_COMMAND_INTERACT.setMinGroup(OlympaGroup.MOD);
 	}
 
 	@Override
