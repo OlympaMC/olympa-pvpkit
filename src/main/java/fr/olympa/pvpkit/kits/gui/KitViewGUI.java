@@ -28,7 +28,7 @@ public class KitViewGUI extends OlympaGUI {
 	public boolean onClick(Player p, ItemStack current, int slot, ClickType click) {
 		OlympaPlayerPvPKit olympaPlayer = OlympaPlayerPvPKit.get(p);
 		if (slot == 12) {
-			new KitListGUI(olympaPlayer).create(p);
+			new KitListView(olympaPlayer).toGUI().create(p);
 		}else if (slot == 14) {
 			if (kit.canTake(olympaPlayer)) {
 				kit.give(olympaPlayer, p);

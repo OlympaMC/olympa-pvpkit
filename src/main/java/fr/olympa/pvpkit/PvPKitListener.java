@@ -31,7 +31,7 @@ import fr.olympa.api.common.groups.OlympaGroup;
 import fr.olympa.api.spigot.item.ItemUtils;
 import fr.olympa.api.utils.Prefix;
 import fr.olympa.pvpkit.kits.Kit;
-import fr.olympa.pvpkit.kits.gui.KitListGUI;
+import fr.olympa.pvpkit.kits.gui.KitListView;
 import fr.olympa.pvpkit.xp.XPManagement;
 
 public class PvPKitListener implements Listener {
@@ -171,7 +171,7 @@ public class PvPKitListener implements Listener {
 	public void onInteract(PlayerInteractEvent e) {
 		if (e.getHand() == EquipmentSlot.HAND) {
 			if (MENU_ITEM.equals(e.getItem())) {
-				new KitListGUI(OlympaPlayerPvPKit.get(e.getPlayer())).create(e.getPlayer());
+				new KitListView(OlympaPlayerPvPKit.get(e.getPlayer())).toGUI().create(e.getPlayer());
 			}
 		}
 	}

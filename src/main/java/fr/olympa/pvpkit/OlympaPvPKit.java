@@ -33,13 +33,14 @@ import fr.olympa.api.spigot.utils.TeleportationManager;
 import fr.olympa.core.spigot.OlympaCore;
 import fr.olympa.pvpkit.kits.KitManageCommand;
 import fr.olympa.pvpkit.kits.KitsManager;
-import fr.olympa.pvpkit.kits.gui.KitListGUI;
+import fr.olympa.pvpkit.kits.gui.KitListView;
 import fr.olympa.pvpkit.ranking.BestKillStreakRank;
 import fr.olympa.pvpkit.ranking.TotalKillRank;
 import fr.olympa.pvpkit.spawning.SpawnPointCommand;
 import fr.olympa.pvpkit.spawning.SpawnPointsManager;
 import fr.olympa.pvpkit.xp.LevelCommand;
 import fr.olympa.pvpkit.xp.XPManagement;
+
 import net.minecraft.server.v1_16_R3.MinecraftServer;
 import net.minecraft.server.v1_16_R3.PlayerList;
 
@@ -96,7 +97,7 @@ public class OlympaPvPKit extends OlympaAPIPlugin {
 			new KitCommand<>(this, new ArrayList<>(kits.getKits())) {
 				@Override
 				protected void noArgument() {
-					new KitListGUI(getOlympaPlayer()).create(getPlayer());
+					new KitListView(getOlympaPlayer()).toGUI().create(getPlayer());
 				}
 			}.register();
 		} catch (SQLException e) {
